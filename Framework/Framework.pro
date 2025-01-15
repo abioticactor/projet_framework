@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Controller/matrice.cpp \
     Model/personne.cpp \
+    Tests/personnetest.cpp \
     View/personneview.cpp \
     main.cpp \
     mainwindow.cpp
@@ -18,6 +19,7 @@ SOURCES += \
 HEADERS += \
     Controller/matrice.h \
     Model/personne.h \
+    Tests/personnetest.h \
     View/personneview.h \
     mainwindow.h
 
