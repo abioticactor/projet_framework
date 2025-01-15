@@ -5,7 +5,7 @@ int Personne::identifiant = 0;
 
 
 // Constructeur
-Personne::Personne(std::string nom, std::string prenom) {
+Personne::Personne(const std::string& nom,const std::string& prenom) {
     this->nom = nom;
     this->prenom = prenom;
     this->id = ++identifiant;// Génération automatique d'un identifiant unique
@@ -16,7 +16,7 @@ std::string Personne::getNom() const {
     return nom;
 }
 
-void Personne::setNom(std::string nom) {
+void Personne::setNom(const std::string& nom) {
     this->nom = nom;
 }
 
@@ -25,7 +25,7 @@ std::string Personne::getPrenom() const {
 }
 
 // Setters
-void Personne::setPrenom(std::string prenom) {
+void Personne::setPrenom(const std::string& prenom) {
     this->prenom = prenom;
 }
 
