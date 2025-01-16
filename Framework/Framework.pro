@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     Controller/matrice.cpp \
+    Model/calendrier.cpp \
+    Model/creneau.cpp \
     Model/personne.cpp \
     View/personneview.cpp \
     main.cpp \
@@ -17,6 +19,8 @@ SOURCES += \
 
 HEADERS += \
     Controller/matrice.h \
+    Model/calendrier.h \
+    Model/creneau.h \
     Model/personne.h \
     View/personneview.h \
     mainwindow.h
