@@ -12,7 +12,10 @@ SOURCES += \
     Controller/matrice.cpp \
     Model/calendrier.cpp \
     Model/creneau.cpp \
+    Model/enseignant.cpp \
     Model/personne.cpp \
+    Tests/enseignanttest.cpp \
+    Tests/personnetest.cpp \
     View/personneview.cpp \
     main.cpp \
     mainwindow.cpp
@@ -21,7 +24,10 @@ HEADERS += \
     Controller/matrice.h \
     Model/calendrier.h \
     Model/creneau.h \
+    Model/enseignant.h \
     Model/personne.h \
+    Tests/enseignanttest.h \
+    Tests/personnetest.h \
     View/personneview.h \
     mainwindow.h
 
