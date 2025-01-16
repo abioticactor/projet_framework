@@ -12,6 +12,7 @@ SOURCES += \
     Controller/csv.cpp \
     Controller/matrice.cpp \
     Model/personne.cpp \
+    View/csvview.cpp \
     View/personneview.cpp \
     main.cpp \
     mainwindow.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     Controller/csv.h \
     Controller/matrice.h \
     Model/personne.h \
+    View/csvview.h \
     View/personneview.h \
     mainwindow.h
 
