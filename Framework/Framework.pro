@@ -10,7 +10,9 @@ CONFIG += c++17
 
 SOURCES += \
     Controller/matrice.cpp \
+    Model/enseignant.cpp \
     Model/personne.cpp \
+    Tests/enseignanttest.cpp \
     Tests/personnetest.cpp \
     View/personneview.cpp \
     main.cpp \
@@ -18,7 +20,9 @@ SOURCES += \
 
 HEADERS += \
     Controller/matrice.h \
+    Model/enseignant.h \
     Model/personne.h \
+    Tests/enseignanttest.h \
     Tests/personnetest.h \
     View/personneview.h \
     mainwindow.h

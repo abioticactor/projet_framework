@@ -1,4 +1,4 @@
-#include "personnetest.h"
+#include "Tests/personnetest.h"
 
 void PersonneTest::runTests() {
     std::cout << "Démarrage des tests pour la classe Personne...\n";
