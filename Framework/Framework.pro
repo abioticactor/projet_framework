@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Controller/csv.cpp \
     Controller/matrice.cpp \
     Model/personne.cpp \
     View/personneview.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    Controller/csv.h \
     Controller/matrice.h \
     Model/personne.h \
     View/personneview.h \
