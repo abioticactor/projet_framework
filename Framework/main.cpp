@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "Tests/personnetest.h"
 #include "Tests/enseignanttest.h"
+#include "Tests/etudianttest.h"
 
 
 #include <QApplication>
@@ -18,6 +19,8 @@ int main(int argc, char *argv[])
     //Test classe Enseignant
     EnseignantTest::runTests();
 
+    //Test classe Etudiant
+    EtudiantTest::runTests();
 
     return 0;
 }

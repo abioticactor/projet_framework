@@ -13,8 +13,10 @@ SOURCES += \
     Model/calendrier.cpp \
     Model/creneau.cpp \
     Model/enseignant.cpp \
+    Model/etudiant.cpp \
     Model/personne.cpp \
     Tests/enseignanttest.cpp \
+    Tests/etudianttest.cpp \
     Tests/personnetest.cpp \
     View/personneview.cpp \
     main.cpp \
@@ -25,8 +27,10 @@ HEADERS += \
     Model/calendrier.h \
     Model/creneau.h \
     Model/enseignant.h \
+    Model/etudiant.h \
     Model/personne.h \
     Tests/enseignanttest.h \
+    Tests/etudianttest.h \
     Tests/personnetest.h \
     View/personneview.h \
     mainwindow.h
