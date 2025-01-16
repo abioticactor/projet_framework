@@ -7,7 +7,7 @@ void Calendrier::ajouteCreneau(Creneau* c){
     this->taille=taille+1;
 }
 
-void Calendrier::retireCreneau(Creneau* c){
+/*void Calendrier::retireCreneau(Creneau* c){
     int index=-1;
     Creneau* p_c;
     for (int i=0;i<this->taille;i++){
@@ -20,9 +20,20 @@ void Calendrier::retireCreneau(Creneau* c){
         this->creneaux.erase(creneaux.begin()+index-1);
         this->taille=taille-1;
     }
+}*/
+
+void Calendrier::retireCreneau(Creneau* c) {
+    for (auto it = creneaux.begin(); it != creneaux.end(); ++it) {
+        if (**it == *c) {  // Comparaison des valeurs des créneaux
+            creneaux.erase(it); // Supprime le créneau trouvé
+            taille -= 1;        // Met à jour la taille
+            return;             // Fin de la méthode après suppression
+        }
+    }
 }
 
-std::vector<Creneau*> Calendrier::getCalendrier(){
+
+std::vector<Creneau*> Calendrier::getCalendrier() const{
     return this->creneaux;
 }
 
@@ -30,7 +41,7 @@ int Calendrier::getTaille(){
     return this->taille;
 }
 
-bool Calendrier::estDispo(Creneau* c){
+/*bool Calendrier::estDispo(Creneau* c){
     bool result=true;
     for (int i=0;i<this->taille;i++){
         Creneau* p_c=this->creneaux[i];
@@ -39,7 +50,17 @@ bool Calendrier::estDispo(Creneau* c){
         }
     }
     return result;
+}*/
+
+bool Calendrier::estDispo(Creneau* c) {
+    for (int i = 0; i < this->taille; i++) {
+        if (*this->creneaux[i] == *c) {  // Utilisation de l'opérateur == de Creneau
+            return false;
+        }
+    }
+    return true;
 }
+
 
 void Calendrier::triCreneau(){
     int t=this->getTaille();
