@@ -8,7 +8,7 @@
 #include "Tests/stagetest.h"
 #include "Tests/enseignantstagetest.h"
 #include "Tests/integrationtest.h"
-
+#include "Tests/csvtest.h"
 
 
 #include <QApplication>
@@ -41,7 +41,11 @@ int main(int argc, char *argv[])
     //Test classe EnseignantStage
     EnseignantStageTest::runTests();
 
+    //Test liens
     IntegrationTest::runTests();
+
+    CSVTest::runTests();
+
 
 
     return 0;

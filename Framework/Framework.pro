@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     Controller/csv.cpp \
+    Controller/csvhandler.cpp \
     Controller/matrice.cpp \
     Model/calendrier.cpp \
     Model/creneau.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     Model/etudiant.cpp \
     Model/personne.cpp \
     Model/stage.cpp \
+    Tests/csvtest.cpp \
     Tests/enseignantstagetest.cpp \
     Tests/enseignanttest.cpp \
     Tests/etudianttest.cpp \
@@ -33,6 +35,7 @@ SOURCES += \
 
 HEADERS += \
     Controller/csv.h \
+    Controller/csvhandler.h \
     Controller/matrice.h \
     Model/calendrier.h \
     Model/creneau.h \
@@ -41,6 +44,7 @@ HEADERS += \
     Model/etudiant.h \
     Model/personne.h \
     Model/stage.h \
+    Tests/csvtest.h \
     Tests/enseignantstagetest.h \
     Tests/enseignanttest.h \
     Tests/etudianttest.h \
