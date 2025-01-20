@@ -13,11 +13,16 @@ SOURCES += \
     Model/calendrier.cpp \
     Model/creneau.cpp \
     Model/enseignant.cpp \
+    Model/enseignantstage.cpp \
     Model/etudiant.cpp \
     Model/personne.cpp \
+    Model/stage.cpp \
+    Tests/enseignantstagetest.cpp \
     Tests/enseignanttest.cpp \
     Tests/etudianttest.cpp \
+    Tests/integrationtest.cpp \
     Tests/personnetest.cpp \
+    Tests/stagetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
     View/personneview.cpp \
@@ -29,11 +34,16 @@ HEADERS += \
     Model/calendrier.h \
     Model/creneau.h \
     Model/enseignant.h \
+    Model/enseignantstage.h \
     Model/etudiant.h \
     Model/personne.h \
+    Model/stage.h \
+    Tests/enseignantstagetest.h \
     Tests/enseignanttest.h \
     Tests/etudianttest.h \
+    Tests/integrationtest.h \
     Tests/personnetest.h \
+    Tests/stagetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
     View/personneview.h \

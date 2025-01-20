@@ -40,3 +40,16 @@ std::string Etudiant::getClasse() const {
 void Etudiant::setClasse(const std::string& classe) {
     this->classe = classe;
 }
+
+// Gestion des stages
+void Etudiant::assignerStage(const std::shared_ptr<Stage>& stage) {
+    this->stage = stage;
+}
+
+std::shared_ptr<Stage> Etudiant::getStage() const {
+    return stage;
+}
+
+void Etudiant::setStage(const std::shared_ptr<Stage>& stage) {
+    this->stage = stage;
+}
