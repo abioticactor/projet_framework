@@ -9,8 +9,8 @@
 #include <memory>
 
 
-// #include "enseignant.h"
-// #include "etudiant.h"
+#include "enseignant.h"
+#include "etudiant.h"
 class Enseignant;
 class Etudiant;
 
