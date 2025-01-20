@@ -5,6 +5,10 @@
 #include "Tests/testcreneau.h"
 #include "Tests/testcalendrier.h"
 #include "Tests/etudianttest.h"
+#include "Tests/stagetest.h"
+#include "Tests/enseignantstagetest.h"
+#include "Tests/integrationtest.h"
+
 
 
 #include <QApplication>
@@ -30,6 +34,15 @@ int main(int argc, char *argv[])
 
     //Test classe Etudiant
     EtudiantTest::runTests();
+
+    //Test classe Stage
+    StageTest::runTests();
+
+    //Test classe EnseignantStage
+    EnseignantStageTest::runTests();
+
+    IntegrationTest::runTests();
+
 
     return 0;
 }

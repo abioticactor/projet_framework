@@ -8,6 +8,8 @@ void EtudiantTest::runTests() {
     testAjouterDisponibiliteEtudiant();
     testRetirerDisponibiliteEtudiant();
     testGetDisponibilitesEtudiant();
+    testAssignationStage();
+    testGetSetStage();
     std::cout << "Tous les tests de la classe Etudiant ont réussi avec succès !\n";
 }
 
@@ -88,3 +90,32 @@ void EtudiantTest::testGetDisponibilitesEtudiant() {
 
     std::cout << "Test getDisponibilites : OK\n";
 }
+
+void EtudiantTest::testAssignationStage() {
+    auto tuteur = std::make_shared<Personne>("Dupont", "Jean");
+    auto stage = std::make_shared<Stage>("Google", "Développeur", tuteur);
+
+    Etudiant etudiant("Martin", "Paul", "E4", {});
+    etudiant.assignerStage(stage);
+
+    auto etudiantStage = etudiant.getStage();
+    assert(etudiantStage->getTitre() == "Développeur");
+    assert(etudiantStage->getEntreprise() == "Google");
+    assert(etudiantStage->getTuteur()->getNom() == "Dupont");
+    std::cout << "Test assignationStage : OK\n";
+}
+
+void EtudiantTest::testGetSetStage() {
+    auto tuteur = std::make_shared<Personne>("Dupont", "Marie");
+    auto stage1 = std::make_shared<Stage>("Microsoft", "Data Scientist", tuteur);
+    auto stage2 = std::make_shared<Stage>("Amazon", "Cloud Engineer", tuteur);
+
+    Etudiant etudiant("Paul", "Paul", "E4", {});
+    etudiant.setStage(stage1);
+    assert(etudiant.getStage()->getTitre() == "Data Scientist");
+
+    etudiant.setStage(stage2);
+    assert(etudiant.getStage()->getTitre() == "Cloud Engineer");
+    std::cout << "Test get/set Stage : OK\n";
+}
+

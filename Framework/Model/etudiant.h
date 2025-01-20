@@ -3,6 +3,8 @@
 
 #include "Model/personne.h"
 #include "Model/calendrier.h"
+#include "Model/stage.h"
+
 #include <vector>
 #include <memory>
 #include <string>
@@ -12,6 +14,7 @@ private:
     std::string classe;                     // Classe de l'étudiant
     std::vector<std::string> options;       // Liste des options choisies
     Calendrier calendrier;            // Gestion des créneaux via un calendrier
+    std::shared_ptr<Stage> stage;           // Stage associé à l'étudiant
 
 public:
     // Constructeur
@@ -29,6 +32,11 @@ public:
     // Gestion de la classe
     std::string getClasse() const;
     void setClasse(const std::string& classe);
+
+    // Gestion des stages
+    void assignerStage(const std::shared_ptr<Stage>& stage);
+    std::shared_ptr<Stage> getStage() const;
+    void setStage(const std::shared_ptr<Stage>& stage);
 };
 
 #endif // ETUDIANT_H

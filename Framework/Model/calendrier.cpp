@@ -78,5 +78,7 @@ void Calendrier::triCreneau(){
         calend.ajouteCreneau(p_min);
         this->retireCreneau(p_min);
     }
-    this->creneaux=calend.getCalendrier();
+    for (int i=0;i<calend.getTaille();i++){
+        this->ajouteCreneau(calend.getCalendrier()[i]);
+    }
 }

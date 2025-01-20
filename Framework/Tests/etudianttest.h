@@ -18,6 +18,8 @@ private:
     static void testAjouterDisponibiliteEtudiant();
     static void testRetirerDisponibiliteEtudiant();
     static void testGetDisponibilitesEtudiant();
+    static void testAssignationStage();
+    static void testGetSetStage();
 };
 
 #endif // ETUDIANTTEST_H
