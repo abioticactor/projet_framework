@@ -16,6 +16,8 @@ private:
     static void testAjouterCompetence();
     static void testGetCompetences();
     static void testPossedeCompetence();
+    static void testAjouterDisponibilite();
+    static void testRetirerDisponibilite();
 };
 
 #endif // ENSEIGNANTTEST_H

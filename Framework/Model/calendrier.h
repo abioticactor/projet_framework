@@ -13,7 +13,7 @@ private:
 
 public:
     Calendrier();
-    std::vector<Creneau*> getCalendrier();
+    std::vector<Creneau*> getCalendrier() const;
     int getTaille();
     void ajouteCreneau(Creneau* c);
     void retireCreneau(Creneau* c);

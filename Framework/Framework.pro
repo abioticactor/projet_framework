@@ -13,8 +13,10 @@ SOURCES += \
     Model/calendrier.cpp \
     Model/creneau.cpp \
     Model/enseignant.cpp \
+    Model/etudiant.cpp \
     Model/personne.cpp \
     Tests/enseignanttest.cpp \
+    Tests/etudianttest.cpp \
     Tests/personnetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
@@ -27,8 +29,10 @@ HEADERS += \
     Model/calendrier.h \
     Model/creneau.h \
     Model/enseignant.h \
+    Model/etudiant.h \
     Model/personne.h \
     Tests/enseignanttest.h \
+    Tests/etudianttest.h \
     Tests/personnetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
