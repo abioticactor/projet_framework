@@ -16,6 +16,8 @@ SOURCES += \
     Model/personne.cpp \
     Tests/enseignanttest.cpp \
     Tests/personnetest.cpp \
+    Tests/testcalendrier.cpp \
+    Tests/testcreneau.cpp \
     View/personneview.cpp \
     main.cpp \
     mainwindow.cpp
@@ -28,6 +30,8 @@ HEADERS += \
     Model/personne.h \
     Tests/enseignanttest.h \
     Tests/personnetest.h \
+    Tests/testcalendrier.h \
+    Tests/testcreneau.h \
     View/personneview.h \
     mainwindow.h
 
