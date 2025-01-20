@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Controller/csv.cpp \
     Controller/matrice.cpp \
     Model/calendrier.cpp \
     Model/creneau.cpp \
@@ -20,11 +21,13 @@ SOURCES += \
     Tests/personnetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
+    Tests/testcsv.cpp \
     View/personneview.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    Controller/csv.h \
     Controller/matrice.h \
     Model/calendrier.h \
     Model/creneau.h \
@@ -36,6 +39,7 @@ HEADERS += \
     Tests/personnetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
+    Tests/testcsv.h \
     View/personneview.h \
     mainwindow.h
 
