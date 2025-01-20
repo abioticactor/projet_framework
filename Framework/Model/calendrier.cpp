@@ -62,7 +62,7 @@ bool Calendrier::estDispo(Creneau* c) {
 }
 
 
-void Calendrier::triCreneau(){
+/*void Calendrier::triCreneau(){
     int t=this->getTaille();
     Calendrier calend;
     while (calend.getTaille()<t){
@@ -81,4 +81,14 @@ void Calendrier::triCreneau(){
     for (int i=0;i<calend.getTaille();i++){
         this->ajouteCreneau(calend.getCalendrier()[i]);
     }
+}*/
+
+void Calendrier::triCreneau() {
+    std::sort(creneaux.begin(), creneaux.end(), [](Creneau* a, Creneau* b) {
+        if (a->getDate() != b->getDate()) {
+            return a->getDate() < b->getDate(); // Tri par date
+        }
+        return a->getHeure() < b->getHeure();   // Tri par heure si les dates sont identiques
+    });
 }
+
