@@ -11,6 +11,7 @@ public:
     static void runTests();
     static void testAjouteRetireCreneau();
     static void testDispo();
+    static void testTri();
 };
 
 #endif // TESTCALENDRIER_H
