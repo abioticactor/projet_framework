@@ -26,6 +26,8 @@ public:
     void ajouterCompetence(const std::string& competence);
     std::vector<std::string> getCompetences() const;
     bool possedeCompetence(const std::string& competence) const;
+    bool operator == (Enseignant& e);
+
 };
 
 #endif // ENSEIGNANT_H

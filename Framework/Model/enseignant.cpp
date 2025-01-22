@@ -37,3 +37,7 @@ std::vector<std::string> Enseignant::getCompetences() const {
 bool Enseignant::possedeCompetence(const std::string& competence) const {
     return std::find(competences.begin(), competences.end(), competence) != competences.end();
 }
+
+bool Enseignant::operator == (Enseignant& e){
+    return (this->getNom()==e.getNom())&(this->getPrenom()==e.getPrenom());
+}

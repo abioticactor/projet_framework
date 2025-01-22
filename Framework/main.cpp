@@ -9,6 +9,7 @@
 #include "Tests/enseignantstagetest.h"
 #include "Tests/integrationtest.h"
 #include "Tests/csvtest.h"
+#include "Tests/testjury.h"
 
 
 #include <QApplication>
@@ -37,6 +38,9 @@ int main(int argc, char *argv[])
 
     //Test classe Stage
     StageTest::runTests();
+
+    //Test classe Jury
+    TestJury::runTests();
 
     //Test classe EnseignantStage
     //EnseignantStageTest::runTests();
