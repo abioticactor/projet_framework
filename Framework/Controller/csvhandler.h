@@ -7,6 +7,11 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <unordered_map>
+
 
 class CSVHandler {
 private:
@@ -28,6 +33,10 @@ private:
 
     // Vérifie si une chaîne est vide ou non
     bool estVide(const std::string& chaine);
+
+    //Accent
+    std::string corrigerEncodage(const std::string& texte);
+
 };
 
 #endif // CSVHANDLER_H

@@ -1,8 +1,4 @@
 #include "Controller/csvhandler.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <unordered_map>
 
 // Constructeur
 CSVHandler::CSVHandler(const std::string& cheminFichier) : cheminFichier(cheminFichier) {}
@@ -52,6 +48,7 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
 
     while (std::getline(fichier, ligne)) {
         //std::cout << "Ligne lue : " << ligne << std::endl;
+        ligne = corrigerEncodage(ligne);
         auto champs = decouperLigne(ligne, ';');
 
         if (champs.size() < 6){
@@ -59,12 +56,12 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
             continue; // Vérification du format (Nom, Prénom, Option, Entreprise, Sujet, Tuteur)
         }
 
-        std::string nom = champs[0];
-        std::string prenom = champs[1];
-        std::string option = champs[2];
-        std::string entreprise = champs[3];
-        std::string sujet = champs[4];
-        std::string tuteurESEO = champs[5];
+        std::string nom = corrigerEncodage(champs[0]);
+        std::string prenom = corrigerEncodage(champs[1]);
+        std::string option = corrigerEncodage(champs[2]);
+        std::string entreprise = corrigerEncodage(champs[3]);
+        std::string sujet = corrigerEncodage(champs[4]);
+        std::string tuteurESEO = corrigerEncodage(champs[5]);
 
         // Affiche les champs découpés
         /*std::cout << "Nom : " << nom << ", Prenom : " << prenom << ", Option : " << option
@@ -102,4 +99,28 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
     }
 
     fichier.close();
+}
+
+std::string CSVHandler::corrigerEncodage(const std::string& texte) {
+    std::string resultat;
+    resultat.reserve(texte.size());
+
+    for (size_t i = 0; i < texte.size(); ++i) {
+        unsigned char c = texte[i];
+
+        switch (c) {
+        case 0xC8: resultat += "É"; break; // È devient É
+        case 0xE8: resultat += "è"; break; // è reste è
+        case 0xF9: resultat += "ù"; break; // ù reste ù
+        case 0xE9: resultat += "é"; break; // é reste é
+        case 0xC7: resultat += "Ç"; break; // Ç reste Ç
+        case 0x92: // Apostrophe typographique (’)
+        case 0x27: // Apostrophe ASCII (')
+        case 0xB4: // Accent aigu utilisé comme apostrophe (´)
+            resultat += "'"; break; // Remplace toutes par l'apostrophe ASCII
+        default: resultat += c; break; // Autres caractères inchangés
+        }
+    }
+
+    return resultat;
 }
