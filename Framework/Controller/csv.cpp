@@ -42,7 +42,7 @@ bool CSV::ecrireFichier(const std::vector<std::vector<QString>>& donnees) {
         return true; // Succès
     } else {
         qDebug() << "Erreur ouverture fichier CSV (écriture) : " << file.errorString();
-        return false; // Échec
+        return false; // echec
     }
 }
 
