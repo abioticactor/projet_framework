@@ -20,7 +20,7 @@ public:
     // Gestion des créneaux
     void ajouterDisponibilite(Creneau* creneau);
     void retirerDisponibilite(Creneau* creneau);
-    std::vector<Creneau*> getDisponibilites() const;
+    Calendrier getDisponibilites() const;
 
     // Gestion des compétences
     void ajouterCompetence(const std::string& competence);

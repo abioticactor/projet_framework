@@ -17,6 +17,7 @@ SOURCES += \
     Model/enseignant.cpp \
     Model/enseignantstage.cpp \
     Model/etudiant.cpp \
+    Model/jury.cpp \
     Model/personne.cpp \
     Model/stage.cpp \
     Tests/csvtest.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
     View/enseignantstageview.cpp \
     View/enseignantview.cpp \
     View/etudiantview.cpp \
+    Tests/testjury.cpp \
     View/personneview.cpp \
     View/stageview.cpp \
     main.cpp \
@@ -49,6 +51,7 @@ HEADERS += \
     Model/enseignant.h \
     Model/enseignantstage.h \
     Model/etudiant.h \
+    Model/jury.h \
     Model/personne.h \
     Model/stage.h \
     Tests/csvtest.h \
@@ -67,6 +70,7 @@ HEADERS += \
     View/enseignantstageview.h \
     View/enseignantview.h \
     View/etudiantview.h \
+    Tests/testjury.h \
     View/personneview.h \
     View/stageview.h \
     mainwindow.h

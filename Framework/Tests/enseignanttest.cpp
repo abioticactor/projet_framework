@@ -59,7 +59,7 @@ void EnseignantTest::testAjouterDisponibilite() {
     enseignant.ajouterDisponibilite(creneau1);
     enseignant.ajouterDisponibilite(creneau2); // Ne doit pas être ajouté
 
-    auto disponibilites = enseignant.getDisponibilites();
+    auto disponibilites = enseignant.getDisponibilites().getCalendrier();
     assert(disponibilites.size() == 1);
     assert(disponibilites[0]->getDate() == "2025-01-01");
     assert(disponibilites[0]->getHeure() == "10:00");
@@ -79,7 +79,7 @@ void EnseignantTest::testRetirerDisponibilite() {
     enseignant.ajouterDisponibilite(creneau2);
     enseignant.retirerDisponibilite(creneau1);
 
-    auto disponibilites = enseignant.getDisponibilites();
+    auto disponibilites = enseignant.getDisponibilites().getCalendrier();
     assert(disponibilites.size() == 1);
     assert(disponibilites[0]->getDate() == "2025-01-04");
 

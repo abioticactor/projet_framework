@@ -19,8 +19,8 @@ void Enseignant::retirerDisponibilite(Creneau* creneau) {
     calendrier.retireCreneau(creneau);
 }
 
-std::vector<Creneau*> Enseignant::getDisponibilites() const {
-    return calendrier.getCalendrier();
+Calendrier Enseignant::getDisponibilites() const {
+    return this->calendrier;
 }
 
 // Gestion des compétences
