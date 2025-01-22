@@ -39,10 +39,10 @@ int main(int argc, char *argv[])
     StageTest::runTests();
 
     //Test classe EnseignantStage
-    EnseignantStageTest::runTests();
+    //EnseignantStageTest::runTests();
 
     //Test liens
-    IntegrationTest::runTests();
+    //IntegrationTest::runTests();
 
     CSVTest::runTests();
 

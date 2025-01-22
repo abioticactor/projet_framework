@@ -92,7 +92,7 @@ void EtudiantTest::testGetDisponibilitesEtudiant() {
 }
 
 void EtudiantTest::testAssignationStage() {
-    auto tuteur = std::make_shared<Personne>("Dupont", "Jean");
+    auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
     auto stage = std::make_shared<Stage>("Google", "Développeur", tuteur);
 
     Etudiant etudiant("Martin", "Paul", "E4", {});
@@ -106,7 +106,7 @@ void EtudiantTest::testAssignationStage() {
 }
 
 void EtudiantTest::testGetSetStage() {
-    auto tuteur = std::make_shared<Personne>("Dupont", "Marie");
+    auto tuteur = std::make_shared<Enseignant>("Dupont", "Marie");
     auto stage1 = std::make_shared<Stage>("Microsoft", "Data Scientist", tuteur);
     auto stage2 = std::make_shared<Stage>("Amazon", "Cloud Engineer", tuteur);
 

@@ -1,4 +1,4 @@
-#include "Tests/enseignantstagetest.h"
+/*#include "Tests/enseignantstagetest.h"
 
 void EnseignantStageTest::runTests() {
     std::cout << "Démarrage des tests pour la classe EnseignantStage...\n";
@@ -41,4 +41,4 @@ void EnseignantStageTest::testGetSetStage() {
     enseignantStage.setStage(stage2);
     assert(enseignantStage.getStage()->getEntreprise() == "Amazon");
     std::cout << "Test get/set Stage : OK\n";
-}
+}*/

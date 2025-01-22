@@ -24,7 +24,7 @@ bool CSVHandler::estVide(const std::string& chaine) {
 }
 
 // Méthode principale pour lire le fichier CSV
-void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& etudiants,
+/*void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& etudiants,
                                       std::vector<std::shared_ptr<Stage>>& stages,
                                       std::vector<std::shared_ptr<Enseignant>>& enseignants,
                                       std::vector<std::shared_ptr<EnseignantStage>>& enseignantStages) {
@@ -64,9 +64,9 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
         std::string tuteurESEO = corrigerEncodage(champs[5]);
 
         // Affiche les champs découpés
-        /*std::cout << "Nom : " << nom << ", Prenom : " << prenom << ", Option : " << option
-                  << ", Entreprise : " << entreprise << ", Sujet : " << sujet
-                  << ", Tuteur : " << tuteurESEO << std::endl;*/
+        //std::cout << "Nom : " << nom << ", Prenom : " << prenom << ", Option : " << option
+                 // << ", Entreprise : " << entreprise << ", Sujet : " << sujet
+                 // << ", Tuteur : " << tuteurESEO << std::endl;
 
         // Création ou récupération du stage
         std::string stageKey = entreprise + "-" + sujet;
@@ -99,7 +99,66 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
     }
 
     fichier.close();
+}*/
+
+void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& etudiants,
+                                      std::vector<std::shared_ptr<Stage>>& stages,
+                                      std::vector<std::shared_ptr<Enseignant>>& enseignants) {
+    std::ifstream fichier(cheminFichier);
+    if (!fichier.is_open()) {
+        std::cerr << "Erreur lors de l'ouverture du fichier : " << cheminFichier << std::endl;
+        return;
+    }
+
+    std::unordered_map<std::string, std::shared_ptr<Stage>> mapStages; // Pour éviter les doublons
+    std::unordered_map<std::string, std::shared_ptr<Enseignant>> mapEnseignants; // Pour éviter les doublons
+    std::string ligne;
+
+    // Lire la première ligne pour ignorer les en-têtes
+    std::getline(fichier, ligne);
+
+    while (std::getline(fichier, ligne)) {
+        ligne = corrigerEncodage(ligne);
+        auto champs = decouperLigne(ligne, ';');
+
+        if (champs.size() < 6) {
+            std::cerr << "Ligne ignorée (format incorrect) : " << ligne << "\n";
+            continue;
+        }
+
+        std::string nom = corrigerEncodage(champs[0]);
+        std::string prenom = corrigerEncodage(champs[1]);
+        std::string option = corrigerEncodage(champs[2]);
+        std::string entreprise = corrigerEncodage(champs[3]);
+        std::string sujet = corrigerEncodage(champs[4]);
+        std::string tuteurESEO = corrigerEncodage(champs[5]);
+
+        // Création ou récupération de l'enseignant
+        if (mapEnseignants.find(tuteurESEO) == mapEnseignants.end()) {
+            auto enseignant = std::make_shared<Enseignant>(tuteurESEO, "", std::vector<std::string>{});
+            mapEnseignants[tuteurESEO] = enseignant;
+            enseignants.push_back(enseignant);
+        }
+        auto enseignantAssocie = mapEnseignants[tuteurESEO];
+
+        // Création ou récupération du stage
+        std::string stageKey = entreprise + "-" + sujet;
+        if (mapStages.find(stageKey) == mapStages.end()) {
+            auto stage = std::make_shared<Stage>(entreprise, sujet, enseignantAssocie); // Associer directement le tuteur
+            mapStages[stageKey] = stage;
+            stages.push_back(stage);
+        }
+        auto stageAssocie = mapStages[stageKey];
+
+        // Création de l'étudiant
+        auto etudiant = std::make_shared<Etudiant>(nom, prenom, "Classe par défaut", std::vector<std::string>{option});
+        etudiant->assignerStage(stageAssocie);
+        etudiants.push_back(etudiant);
+    }
+
+    fichier.close();
 }
+
 
 std::string CSVHandler::corrigerEncodage(const std::string& texte) {
     std::string resultat;

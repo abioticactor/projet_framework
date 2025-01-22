@@ -1,4 +1,4 @@
-#include "Model/enseignantstage.h"
+/*#include "Model/enseignantstage.h"
 
 // Constructeur
 EnseignantStage::EnseignantStage(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Stage>& stage)
@@ -20,4 +20,4 @@ std::shared_ptr<Stage> EnseignantStage::getStage() const {
 
 void EnseignantStage::setStage(const std::shared_ptr<Stage>& stage) {
     this->stage = stage;
-}
+}*/

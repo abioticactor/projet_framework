@@ -1,4 +1,4 @@
-#ifndef ENSEIGNANTSTAGE_H
+/*#ifndef ENSEIGNANTSTAGE_H
 #define ENSEIGNANTSTAGE_H
 
 #include "Model/enseignant.h"
@@ -23,4 +23,4 @@ public:
     void setStage(const std::shared_ptr<Stage>& stage);
 };
 
-#endif // ENSEIGNANTSTAGE_H
+#endif // ENSEIGNANTSTAGE_H*/

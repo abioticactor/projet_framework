@@ -1,4 +1,4 @@
-#ifndef ENSEIGNANTSTAGETEST_H
+/*#ifndef ENSEIGNANTSTAGETEST_H
 #define ENSEIGNANTSTAGETEST_H
 
 #include "Model/enseignantstage.h"
@@ -17,4 +17,4 @@ private:
     static void testGetSetStage();
 };
 
-#endif // ENSEIGNANTSTAGETEST_H
+#endif // ENSEIGNANTSTAGETEST_H*/

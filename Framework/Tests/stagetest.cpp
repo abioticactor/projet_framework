@@ -10,7 +10,7 @@ void StageTest::runTests() {
 }
 
 void StageTest::testConstructeur() {
-    auto tuteur = std::make_shared<Personne>("Dupont", "Jean");
+    auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
     Stage stage("Google", "Développeur", tuteur);
 
     assert(stage.getEntreprise() == "Google");
@@ -20,7 +20,7 @@ void StageTest::testConstructeur() {
 }
 
 void StageTest::testGetSetEntreprise() {
-    auto tuteur = std::make_shared<Personne>("Dupont", "Jean");
+    auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
     Stage stage("Google", "Développeur", tuteur);
 
     stage.setEntreprise("Amazon");
@@ -29,7 +29,7 @@ void StageTest::testGetSetEntreprise() {
 }
 
 void StageTest::testGetSetTitre() {
-    auto tuteur = std::make_shared<Personne>("Dupont", "Jean");
+    auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
     Stage stage("Google", "Développeur", tuteur);
 
     stage.setTitre("Data Scientist");
@@ -38,8 +38,8 @@ void StageTest::testGetSetTitre() {
 }
 
 void StageTest::testGetSetTuteur() {
-    auto tuteur1 = std::make_shared<Personne>("Dupont", "Jean");
-    auto tuteur2 = std::make_shared<Personne>("Martin", "Paul");
+    auto tuteur1 = std::make_shared<Enseignant>("Dupont", "Jean");
+    auto tuteur2 = std::make_shared<Enseignant>("Martin", "Paul");
     Stage stage("Google", "Développeur", tuteur1);
 
     stage.setTuteur(tuteur2);

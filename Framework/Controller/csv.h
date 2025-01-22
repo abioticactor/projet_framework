@@ -1,4 +1,4 @@
-#ifndef CSV_H
+/*#ifndef CSV_H
 #define CSV_H
 
 #include <QString>
@@ -22,4 +22,4 @@ private:
     QString cheminFichier;
 };
 
-#endif // CSV_H
+#endif // CSV_H*/

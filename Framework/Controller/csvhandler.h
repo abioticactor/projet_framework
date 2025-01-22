@@ -3,7 +3,9 @@
 
 #include "Model/etudiant.h"
 #include "Model/stage.h"
-#include "Model/enseignantstage.h"
+/*#include "Model/enseignantstage.h"*/
+#include "Model/enseignant.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -24,8 +26,8 @@ public:
     // Méthode principale pour lire le fichier et organiser les données
     void extraireInformations(std::vector<std::shared_ptr<Etudiant>>& etudiants,
                               std::vector<std::shared_ptr<Stage>>& stages,
-                              std::vector<std::shared_ptr<Enseignant>>& enseignants,
-                              std::vector<std::shared_ptr<EnseignantStage>>& enseignantStages);
+                              std::vector<std::shared_ptr<Enseignant>>& enseignants);
+                              /*std::vector<std::shared_ptr<EnseignantStage>>& enseignantStages);*/
 
 private:
     // Méthode pour découper une ligne CSV en plusieurs champs

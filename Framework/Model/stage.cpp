@@ -1,7 +1,7 @@
 #include "stage.h"
 
 // Constructeur
-Stage::Stage(const std::string& entreprise, const std::string& titre, const std::shared_ptr<Personne>& tuteur)
+Stage::Stage(const std::string& entreprise, const std::string& titre, const std::shared_ptr<Enseignant>& tuteur)
     : entreprise(entreprise), titre(titre), tuteur(tuteur) {}
 
 // Gestion de l'entreprise
@@ -23,11 +23,11 @@ void Stage::setTitre(const std::string& titre) {
 }
 
 // Gestion du tuteur
-std::shared_ptr<Personne> Stage::getTuteur() const {
+std::shared_ptr<Enseignant> Stage::getTuteur() const {
     return tuteur;
 }
 
-void Stage::setTuteur(const std::shared_ptr<Personne>& tuteur) {
+void Stage::setTuteur(const std::shared_ptr<Enseignant>& tuteur) {
     this->tuteur = tuteur;
 }
 

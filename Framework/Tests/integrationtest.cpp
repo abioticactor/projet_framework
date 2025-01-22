@@ -1,4 +1,4 @@
-#include "Tests/integrationtest.h"
+/*#include "Tests/integrationtest.h"
 
 void IntegrationTest::runTests() {
     std::cout << "Démarrage des tests d'intégration...\n";
@@ -42,4 +42,4 @@ void IntegrationTest::testLinkingEntities() {
     std::cout << "Enseignant lié : " << enseignantStage.getEnseignant()->getNom() << " " << enseignantStage.getEnseignant()->getPrenom() << "\n";
 
     std::cout << "Test linkingEntities : OK\n";
-}
+}*/

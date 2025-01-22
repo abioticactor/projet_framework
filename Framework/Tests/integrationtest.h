@@ -1,4 +1,4 @@
-#ifndef INTEGRATIONTEST_H
+/*#ifndef INTEGRATIONTEST_H
 #define INTEGRATIONTEST_H
 
 #include "Model/etudiant.h"
@@ -16,4 +16,4 @@ private:
     static void testLinkingEntities();
 };
 
-#endif // INTEGRATIONTEST_H
+#endif // INTEGRATIONTEST_H*/
