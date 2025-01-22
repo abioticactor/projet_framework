@@ -51,7 +51,7 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
     std::getline(fichier, ligne);
 
     while (std::getline(fichier, ligne)) {
-        std::cout << "Ligne lue : " << ligne << std::endl;
+        //std::cout << "Ligne lue : " << ligne << std::endl;
         auto champs = decouperLigne(ligne, ';');
 
         if (champs.size() < 6){
@@ -67,9 +67,9 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
         std::string tuteurESEO = champs[5];
 
         // Affiche les champs découpés
-        std::cout << "Nom : " << nom << ", Prenom : " << prenom << ", Option : " << option
+        /*std::cout << "Nom : " << nom << ", Prenom : " << prenom << ", Option : " << option
                   << ", Entreprise : " << entreprise << ", Sujet : " << sujet
-                  << ", Tuteur : " << tuteurESEO << std::endl;
+                  << ", Tuteur : " << tuteurESEO << std::endl;*/
 
         // Création ou récupération du stage
         std::string stageKey = entreprise + "-" + sujet;
