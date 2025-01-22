@@ -4,6 +4,7 @@
 #include "creneau.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 class Calendrier
 {
