@@ -29,14 +29,6 @@ SOURCES += \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
     Tests/testcsv.cpp \
-    View/calendrierview.cpp \
-    View/creneauvew.cpp \
-    View/csvview.cpp \
-    View/enseignantstageview.cpp \
-    View/enseignantview.cpp \
-    View/etudiantview.cpp \
-    View/personneview.cpp \
-    View/stageview.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -61,14 +53,6 @@ HEADERS += \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
     Tests/testcsv.h \
-    View/calendrierview.h \
-    View/creneauvew.h \
-    View/csvview.h \
-    View/enseignantstageview.h \
-    View/enseignantview.h \
-    View/etudiantview.h \
-    View/personneview.h \
-    View/stageview.h \
     mainwindow.h
 
 FORMS += \

@@ -63,7 +63,7 @@ void CSVTest::testCSVExtraction() {
     std::vector<std::shared_ptr<Stage>> stages;
     std::vector<std::shared_ptr<Enseignant>> enseignants;
 
-    const std::string cheminFichier = "/Users/tomroyer/Downloads/stage_s7.csv";
+    const std::string cheminFichier = "/Users/corentinjozwiak/Downloads/stage_s7.csv";
 
     CSVHandler csvHandler(cheminFichier);
     csvHandler.extraireInformations(etudiants, stages, enseignants);
