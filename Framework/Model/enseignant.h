@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <algorithm> // Pour std::find
+#include <memory> // Ajout pour std::shared_ptr
+
 
 
 class Enseignant : public Personne {
@@ -18,8 +20,8 @@ public:
     Enseignant(const std::string& nom, const std::string& prenom, const std::vector<std::string>& competences = {});
 
     // Gestion des créneaux
-    void ajouterDisponibilite(Creneau* creneau);
-    void retirerDisponibilite(Creneau* creneau);
+    void ajouterDisponibilite(std::shared_ptr<Creneau> creneau);
+    void retirerDisponibilite(std::shared_ptr<Creneau> creneau);
     Calendrier getDisponibilites() const;
 
     // Gestion des compétences

@@ -53,8 +53,8 @@ void EnseignantTest::testPossedeCompetence() {
 
 void EnseignantTest::testAjouterDisponibilite() {
     Enseignant enseignant("Mignot", "Romain");
-    Creneau* creneau1 = new Creneau("2025-01-01", "10:00");
-    Creneau* creneau2 = new Creneau("2025-01-01", "10:00"); // Même créneau
+    auto creneau1 = std::make_shared<Creneau>("2025-01-01", "10:00");
+    auto creneau2 = std::make_shared<Creneau>("2025-01-01", "10:00"); // Même créneau
 
     enseignant.ajouterDisponibilite(creneau1);
     enseignant.ajouterDisponibilite(creneau2); // Ne doit pas être ajouté
@@ -64,16 +64,13 @@ void EnseignantTest::testAjouterDisponibilite() {
     assert(disponibilites[0]->getDate() == "2025-01-01");
     assert(disponibilites[0]->getHeure() == "10:00");
 
-    delete creneau1;
-    delete creneau2;
-
     std::cout << "Test ajouterDisponibilite : OK\n";
 }
 
 void EnseignantTest::testRetirerDisponibilite() {
     Enseignant enseignant("Renut", "Damien");
-    Creneau* creneau1 = new Creneau("2025-01-03", "10:00");
-    Creneau* creneau2 = new Creneau("2025-01-04", "14:00");
+    auto creneau1 = std::make_shared<Creneau>("2025-01-03", "10:00");
+    auto creneau2 = std::make_shared<Creneau>("2025-01-04", "14:00");
 
     enseignant.ajouterDisponibilite(creneau1);
     enseignant.ajouterDisponibilite(creneau2);
@@ -83,10 +80,6 @@ void EnseignantTest::testRetirerDisponibilite() {
     assert(disponibilites.size() == 1);
     assert(disponibilites[0]->getDate() == "2025-01-04");
 
-    delete creneau1;
-    delete creneau2;
-
     std::cout << "Test retirerDisponibilite : OK\n";
 }
-
 

@@ -19,13 +19,14 @@ SOURCES += \
     Model/etudiant.cpp \
     Model/jury.cpp \
     Model/personne.cpp \
+    Model/soutenance.cpp \
     Model/stage.cpp \
     Tests/csvtest.cpp \
     Tests/enseignantstagetest.cpp \
     Tests/enseignanttest.cpp \
     Tests/etudianttest.cpp \
-    Tests/integrationtest.cpp \
     Tests/personnetest.cpp \
+    Tests/soutenancetest.cpp \
     Tests/stagetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
@@ -45,13 +46,14 @@ HEADERS += \
     Model/etudiant.h \
     Model/jury.h \
     Model/personne.h \
+    Model/soutenance.h \
     Model/stage.h \
     Tests/csvtest.h \
     Tests/enseignantstagetest.h \
     Tests/enseignanttest.h \
     Tests/etudianttest.h \
-    Tests/integrationtest.h \
     Tests/personnetest.h \
+    Tests/soutenancetest.h \
     Tests/stagetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
@@ -66,3 +68,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    ../../../../../../../Downloads/stage_s7.csv

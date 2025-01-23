@@ -12,13 +12,13 @@ private:
 public:
     Creneau();
     Creneau(std::string date,std::string heure);
-    std::string getDate();
-    std::string getHeure();
+    std::string getDate() const;
+    std::string getHeure() const;
     void setDate(std::string d);
     void setHeure(std::string h);
-    bool operator < (Creneau& c);
-    bool operator > (Creneau& c);
-    bool operator == (Creneau& c);
+    bool operator < (const Creneau& c) const;
+    bool operator > (const Creneau& c) const;
+    bool operator == (const Creneau& c) const;
 };
 
 #endif // CRENEAU_H

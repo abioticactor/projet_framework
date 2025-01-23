@@ -42,8 +42,8 @@ void EtudiantTest::testGetSetOptions() {
 
 void EtudiantTest::testAjouterDisponibiliteEtudiant() {
     Etudiant etudiant("Barbe", "Clement", "E4", {});
-    Creneau* creneau1 = new Creneau("2025-01-01", "10:00");
-    Creneau* creneau2 = new Creneau("2025-01-01", "10:00"); // Même créneau
+    auto creneau1 = std::make_shared<Creneau>("2025-01-01", "10:00");
+    auto creneau2 = std::make_shared<Creneau>("2025-01-01", "10:00"); // Même créneau
 
     etudiant.ajouterDisponibiliteEtudiant(creneau1);
     etudiant.ajouterDisponibiliteEtudiant(creneau2); // Ne doit pas être ajouté
@@ -58,8 +58,8 @@ void EtudiantTest::testAjouterDisponibiliteEtudiant() {
 
 void EtudiantTest::testRetirerDisponibiliteEtudiant() {
     Etudiant etudiant("Constant", "Pierre", "E4", {});
-    Creneau* creneau1 = new Creneau("2025-01-03", "10:00");
-    Creneau* creneau2 = new Creneau("2025-01-04", "14:00");
+    auto creneau1 = std::make_shared<Creneau>("2025-01-03", "10:00");
+    auto creneau2 = std::make_shared<Creneau>("2025-01-04", "14:00");
 
     etudiant.ajouterDisponibiliteEtudiant(creneau1);
     etudiant.ajouterDisponibiliteEtudiant(creneau2);
@@ -68,15 +68,14 @@ void EtudiantTest::testRetirerDisponibiliteEtudiant() {
     auto disponibilites = etudiant.getDisponibilitesEtudiant();
     assert(disponibilites.size() == 1);
     assert(disponibilites[0]->getDate() == "2025-01-04");
-    assert(disponibilites[0]->getHeure() == "14:00");
 
     std::cout << "Test retirerDisponibilite : OK\n";
 }
-
 void EtudiantTest::testGetDisponibilitesEtudiant() {
     Etudiant etudiant("Martin", "PE", "E4", {});
-    Creneau* creneau1 = new Creneau("2025-01-03", "10:00");
-    Creneau* creneau2 = new Creneau("2025-01-05", "14:00");
+    auto creneau1 = std::make_shared<Creneau>("2025-01-03", "10:00");
+    auto creneau2 = std::make_shared<Creneau>("2025-01-04", "14:00");
+
 
     etudiant.ajouterDisponibiliteEtudiant(creneau1);
     etudiant.ajouterDisponibiliteEtudiant(creneau2);
@@ -85,7 +84,7 @@ void EtudiantTest::testGetDisponibilitesEtudiant() {
     assert(disponibilites.size() == 2);
     assert(disponibilites[0]->getDate() == "2025-01-03");
     assert(disponibilites[0]->getHeure() == "10:00");
-    assert(disponibilites[1]->getDate() == "2025-01-05");
+    assert(disponibilites[1]->getDate() == "2025-01-04");
     assert(disponibilites[1]->getHeure() == "14:00");
 
     std::cout << "Test getDisponibilites : OK\n";

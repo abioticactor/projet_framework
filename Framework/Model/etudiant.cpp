@@ -5,7 +5,7 @@ Etudiant::Etudiant(const std::string& nom, const std::string& prenom, const std:
     : Personne(nom, prenom), classe(classe), options(options) {}
 
 // Gestion des créneaux via le calendrier
-void Etudiant::ajouterDisponibiliteEtudiant(Creneau* creneau) {
+void Etudiant::ajouterDisponibiliteEtudiant(std::shared_ptr<Creneau> creneau) {
     if (calendrier.estDispo(creneau)) {
         calendrier.ajouteCreneau(creneau);
     } else {
@@ -14,11 +14,11 @@ void Etudiant::ajouterDisponibiliteEtudiant(Creneau* creneau) {
     }
 }
 
-void Etudiant::retirerDisponibiliteEtudiant(Creneau* creneau) {
+void Etudiant::retirerDisponibiliteEtudiant(std::shared_ptr<Creneau> creneau) {
     calendrier.retireCreneau(creneau);
 }
 
-std::vector<Creneau*> Etudiant::getDisponibilitesEtudiant() const {
+std::vector<std::shared_ptr<Creneau>> Etudiant::getDisponibilitesEtudiant() const {
     return calendrier.getCalendrier();
 }
 

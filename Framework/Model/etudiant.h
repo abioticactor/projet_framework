@@ -21,9 +21,9 @@ public:
     Etudiant(const std::string& nom, const std::string& prenom, const std::string& classe, const std::vector<std::string>& options);
 
     // Gestion des créneaux via le calendrier
-    void ajouterDisponibiliteEtudiant(Creneau* creneau);
-    void retirerDisponibiliteEtudiant(Creneau* creneau);
-    std::vector<Creneau*> getDisponibilitesEtudiant() const;
+    void ajouterDisponibiliteEtudiant(std::shared_ptr<Creneau> creneau);
+    void retirerDisponibiliteEtudiant(std::shared_ptr<Creneau> creneau);
+    std::vector<std::shared_ptr<Creneau>> getDisponibilitesEtudiant() const;
 
     // Gestion des options
     std::vector<std::string> getOptions() const;

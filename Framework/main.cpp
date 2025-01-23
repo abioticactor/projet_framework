@@ -1,15 +1,14 @@
 #include "mainwindow.h"
 #include "Tests/personnetest.h"
 #include "Tests/enseignanttest.h"
-
 #include "Tests/testcreneau.h"
 #include "Tests/testcalendrier.h"
 #include "Tests/etudianttest.h"
 #include "Tests/stagetest.h"
 #include "Tests/enseignantstagetest.h"
-#include "Tests/integrationtest.h"
 #include "Tests/csvtest.h"
 #include "Tests/testjury.h"
+#include "Tests/soutenancetest.h"
 
 
 #include <QApplication>
@@ -45,12 +44,15 @@ int main(int argc, char *argv[])
     //Test classe EnseignantStage
     //EnseignantStageTest::runTests();
 
-    //Test liens
-    //IntegrationTest::runTests();
-
+    //Test CSV
     CSVTest::runTests();
 
+    //Test Soutenance
+    SoutenanceTest::runTests();
 
+    //Test liens
+    //const std::string cheminCsv = "/Users/tomroyer/Downloads/stage_s7.csv"; // Chemin vers votre fichier CSV
+    //IntegrationTest::runTests(cheminCsv);
 
     return 0;
 }

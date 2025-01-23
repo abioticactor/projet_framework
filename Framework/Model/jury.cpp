@@ -2,33 +2,34 @@
 
 Jury::Jury() {}
 
-Jury::Jury(Enseignant* president, Enseignant* cojury) {
-    this->president=president;
-    this->cojury=cojury;
+Jury::Jury(std::shared_ptr<Enseignant> president, std::shared_ptr<Enseignant> cojury) {
+    this->president = president;
+    this->cojury = cojury;
 }
 
-Enseignant Jury::getCojury(){
-    return *cojury;
+std::shared_ptr<Enseignant> Jury::getCojury() const {
+    return cojury;
 }
 
-Enseignant Jury::getPresident(){
-    return *president;
+std::shared_ptr<Enseignant> Jury::getPresident() const {
+    return president;
 }
 
-void Jury::setCojury(Enseignant* cojury){
-    this->cojury=cojury;
+void Jury::setCojury(std::shared_ptr<Enseignant> cojury) {
+    this->cojury = cojury;
 }
 
-void Jury::setPresident(Enseignant* president){
-    this->president=president;
+void Jury::setPresident(std::shared_ptr<Enseignant> president) {
+    this->president = president;
 }
 
-bool Jury::verifDispo(){
-    bool etat=false;
-    for (int i=0;i<this->getPresident().getDisponibilites().getTaille();i++){
-        for (int j=0;j<this->getCojury().getDisponibilites().getTaille();j++){
-            if (this->getPresident().getDisponibilites().getCalendrier()[i]==this->getCojury().getDisponibilites().getCalendrier()[j]){
-                etat=true;
+bool Jury::verifDispo() {
+    bool etat = false;
+    for (int i = 0; i < this->getPresident()->getDisponibilites().getTaille(); i++) {
+        for (int j = 0; j < this->getCojury()->getDisponibilites().getTaille(); j++) {
+            if (this->getPresident()->getDisponibilites().getCalendrier()[i] ==
+                this->getCojury()->getDisponibilites().getCalendrier()[j]) {
+                etat = true;
             }
         }
     }
