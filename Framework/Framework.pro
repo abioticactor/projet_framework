@@ -32,6 +32,7 @@ SOURCES += \
     Tests/testcreneau.cpp \
     Tests/testcsv.cpp \
     Tests/testjury.cpp \
+    Tests/testprojet.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -59,6 +60,7 @@ HEADERS += \
     Tests/testcreneau.h \
     Tests/testcsv.h \
     Tests/testjury.h \
+    Tests/testprojet.h \
     mainwindow.h
 
 FORMS += \

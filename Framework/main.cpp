@@ -9,6 +9,7 @@
 #include "Tests/csvtest.h"
 #include "Tests/testjury.h"
 #include "Tests/soutenancetest.h"
+#include "Tests/testprojet.h"
 
 
 #include <QApplication>
@@ -51,8 +52,11 @@ int main(int argc, char *argv[])
     SoutenanceTest::runTests();
 
     //Test liens
-    //const std::string cheminCsv = "/Users/tomroyer/Downloads/stage_s7.csv"; // Chemin vers votre fichier CSV
-    //IntegrationTest::runTests(cheminCsv);
+    TestProjet test;
+    test.extraireDonnees("/Users/tomroyer/Downloads/stage_s7.csv");
+    test.creerEtAssignerCreneaux();
+    test.creerJurysEtAffecterEtudiants();
+    test.afficherToutesLesSoutenances();
 
     return 0;
 }

@@ -2,6 +2,7 @@
 #define JURY_H
 
 #include "enseignant.h"
+#include "creneau.h"
 #include <memory> // Pour std::shared_ptr
 
 class Jury
@@ -9,6 +10,8 @@ class Jury
 private:
     std::shared_ptr<Enseignant> president;
     std::shared_ptr<Enseignant> cojury;
+    std::shared_ptr<Creneau> m_creneauAttribue;
+
 
 public:
     Jury();
@@ -18,6 +21,9 @@ public:
     void setPresident(std::shared_ptr<Enseignant> president);
     void setCojury(std::shared_ptr<Enseignant> cojury);
     bool verifDispo();
+    // NOUVEAU : Setter/Getter pour le créneau
+    void setCreneauAttribue(std::shared_ptr<Creneau> c);
+    std::shared_ptr<Creneau> getCreneauAttribue() const;
 
 };
 

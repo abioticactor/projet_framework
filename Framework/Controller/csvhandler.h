@@ -13,6 +13,8 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <algorithm> // pour std::transform
+#include <cctype>    // pour std::tolower
 
 
 class CSVHandler {
@@ -38,6 +40,9 @@ private:
 
     //Accent
     std::string corrigerEncodage(const std::string& texte);
+
+    static std::string trim(const std::string& s);
+
 
 };
 

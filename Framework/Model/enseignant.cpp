@@ -39,5 +39,5 @@ bool Enseignant::possedeCompetence(const std::string& competence) const {
 }
 
 bool Enseignant::operator == (Enseignant& e){
-    return (this->getNom()==e.getNom())&(this->getPrenom()==e.getPrenom());
+    return (this->getNom()==e.getNom())&&(this->getPrenom()==e.getPrenom());
 }

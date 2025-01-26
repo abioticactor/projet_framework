@@ -92,3 +92,26 @@ bool Soutenance::affecterJury(Etudiant& etudiant, const std::vector<std::shared_
         }
     }
 }*/
+
+
+// Exemple d'implémentation
+void Soutenance::assigner(const std::shared_ptr<Etudiant>& etu,
+                          const std::shared_ptr<Jury>&     jury,
+                          const std::shared_ptr<Creneau>&  creneau)
+{
+    // Option : si vous voulez être sûr de ne pas dupliquer un étudiant
+    // ou un jury dans vos vecteurs, vous pouvez vérifier avant de push_back.
+    // Ou bien vous laissez tel quel.
+    etudiants.push_back(etu);
+    jurys.push_back(jury);
+
+    // On construit la triple liaison
+    Affectation aff{ etu, jury, creneau };
+    m_affectations.push_back(aff);
+}
+
+// Accesseur
+const std::vector<Soutenance::Affectation>& Soutenance::getAffectations() const
+{
+    return m_affectations;
+}

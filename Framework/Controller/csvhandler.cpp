@@ -17,6 +17,36 @@ std::vector<std::string> CSVHandler::decouperLigne(const std::string& ligne, cha
     return champs;
 }
 
+// Fonction locale pour enlever les espaces de début et de fin
+static std::string trim(const std::string& s)
+{
+    // Trouver le premier caractère non ' ' et le dernier
+    size_t start = 0;
+    while (start < s.size() && std::isspace(static_cast<unsigned char>(s[start]))) {
+        start++;
+    }
+
+    size_t end = s.size();
+    while (end > start && std::isspace(static_cast<unsigned char>(s[end - 1]))) {
+        end--;
+    }
+
+    return s.substr(start, end - start);
+}
+
+static std::string normaliserClef(const std::string& texte)
+{
+    // 1) enlever les espaces de début/fin
+    std::string resultat = trim(texte);
+
+    // 2) mettre en minuscules
+    std::transform(resultat.begin(), resultat.end(), resultat.begin(),
+                   [](unsigned char c){ return static_cast<unsigned char>(std::tolower(c)); });
+
+    return resultat;
+}
+
+
 
 // Vérifie si une chaîne est vide
 bool CSVHandler::estVide(const std::string& chaine) {
@@ -134,12 +164,26 @@ void CSVHandler::extraireInformations(std::vector<std::shared_ptr<Etudiant>>& et
         std::string tuteurESEO = corrigerEncodage(champs[5]);
 
         // Création ou récupération de l'enseignant
-        if (mapEnseignants.find(tuteurESEO) == mapEnseignants.end()) {
+        /*if (mapEnseignants.find(tuteurESEO) == mapEnseignants.end()) {
             auto enseignant = std::make_shared<Enseignant>(tuteurESEO, "", std::vector<std::string>{});
             mapEnseignants[tuteurESEO] = enseignant;
             enseignants.push_back(enseignant);
         }
-        auto enseignantAssocie = mapEnseignants[tuteurESEO];
+        auto enseignantAssocie = mapEnseignants[tuteurESEO];*/
+
+        // On modifie pour normaliser la clef
+        std::string clefTuteur = normaliserClef(tuteurESEO);
+
+        if (mapEnseignants.find(clefTuteur) == mapEnseignants.end()) {
+            // Créer un Enseignant (dont 'nom' = clef normalisée,
+            // ou, si vous préférez, le champ "nom" = l'original tuteurESEO, c'est un choix)
+            auto enseignant = std::make_shared<Enseignant>(clefTuteur, "", std::vector<std::string>{});
+
+            mapEnseignants[clefTuteur] = enseignant;
+            enseignants.push_back(enseignant);
+        }
+
+        auto enseignantAssocie = mapEnseignants[clefTuteur];
 
         // Création ou récupération du stage
         std::string stageKey = entreprise + "-" + sujet;
