@@ -33,8 +33,10 @@ SOURCES += \
     Tests/testcsv.cpp \
     Tests/testjury.cpp \
     Tests/testprojet.cpp \
+    creneauxdialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    planningdialog.cpp
 
 HEADERS += \
     Controller/csv.h \
@@ -61,9 +63,13 @@ HEADERS += \
     Tests/testcsv.h \
     Tests/testjury.h \
     Tests/testprojet.h \
-    mainwindow.h
+    creneauxdialog.h \
+    mainwindow.h \
+    planningdialog.h
 
 FORMS += \
+    PlanningDialog.ui \
+    creneauxdialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

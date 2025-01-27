@@ -21,6 +21,13 @@ int main(int argc, char *argv[])
     w.show();
     return a.exec();*/
 
+    QApplication app(argc, argv);
+
+    MainWindow w;
+    w.show();
+
+    return app.exec();
+
     //Test classe Personne
     PersonneTest::runTests();
 

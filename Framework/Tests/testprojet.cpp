@@ -280,7 +280,6 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
         }
         // On passe au creneau suivant
     }
-
     std::cout << "[TestProjet] Fin de l'affectation.\n";
 }
 
@@ -347,4 +346,3 @@ void TestProjet::afficherToutesLesSoutenances() const
 
     std::cout << "=== Fin du recapitulatif ===\n";
 }
-

@@ -15,7 +15,7 @@
 
 
 class TestProjet {
-private:
+public:
     // Données extraites du CSV
     std::vector<std::shared_ptr<Etudiant>>   m_etudiants;
     std::vector<std::shared_ptr<Stage>>      m_stages;
@@ -40,6 +40,17 @@ public:
 
     // 4. Affichage final de toutes les soutenances
     void afficherToutesLesSoutenances() const;
+
+    const Soutenance& getSoutenance() const { return m_soutenance; }
+
+    const std::vector<std::shared_ptr<Etudiant>>& getEtudiants() const {
+        return m_etudiants;
+    }
+
+    // Accès en lecture seule (const) à la liste d’enseignants
+    const std::vector<std::shared_ptr<Enseignant>>& getEnseignants() const {
+        return m_enseignants;
+    }
 };
 
 #endif // TESTPROJET_H
