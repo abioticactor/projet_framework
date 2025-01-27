@@ -33,14 +33,14 @@ int main(int argc, char *argv[])
     //Test classe Calendrier
     TestCalendrier::runTests();
 
+    //Test classe Jury
+    TestJury::runTests();
+
     //Test classe Etudiant
     EtudiantTest::runTests();
 
     //Test classe Stage
     StageTest::runTests();
-
-    //Test classe Jury
-    TestJury::runTests();
 
     //Test classe EnseignantStage
     //EnseignantStageTest::runTests();
