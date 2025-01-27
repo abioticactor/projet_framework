@@ -5,19 +5,19 @@ Enseignant::Enseignant(const std::string& nom, const std::string& prenom, const 
     : Personne(nom, prenom), competences(competences) {}
 
 // Gestion des créneaux
-void Enseignant::ajouterDisponibilite(Creneau* creneau) {
+void Enseignant::ajouterDisponibilite(std::shared_ptr<Creneau> creneau) {
     if (calendrier.estDispo(creneau)) {
         calendrier.ajouteCreneau(creneau);
     } else {
         std::cout << "Le créneau " << creneau->getDate() << " " << creneau->getHeure()
-        << " existe déjà dans le calendrier." << std::endl;
+                  << " existe déjà dans le calendrier." << std::endl;
     }
 }
 
-
-void Enseignant::retirerDisponibilite(Creneau* creneau) {
+void Enseignant::retirerDisponibilite(std::shared_ptr<Creneau> creneau) {
     calendrier.retireCreneau(creneau);
 }
+
 
 Calendrier Enseignant::getDisponibilites() const {
     return this->calendrier;
@@ -39,5 +39,5 @@ bool Enseignant::possedeCompetence(const std::string& competence) const {
 }
 
 bool Enseignant::operator == (Enseignant& e){
-    return (this->getNom()==e.getNom())&(this->getPrenom()==e.getPrenom());
+    return (this->getNom()==e.getNom())&&(this->getPrenom()==e.getPrenom());
 }

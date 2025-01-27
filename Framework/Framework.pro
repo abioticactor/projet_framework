@@ -19,28 +19,24 @@ SOURCES += \
     Model/etudiant.cpp \
     Model/jury.cpp \
     Model/personne.cpp \
+    Model/soutenance.cpp \
     Model/stage.cpp \
     Tests/csvtest.cpp \
     Tests/enseignantstagetest.cpp \
     Tests/enseignanttest.cpp \
     Tests/etudianttest.cpp \
-    Tests/integrationtest.cpp \
     Tests/personnetest.cpp \
+    Tests/soutenancetest.cpp \
     Tests/stagetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
     Tests/testcsv.cpp \
-    View/calendrierview.cpp \
-    View/creneauvew.cpp \
-    View/csvview.cpp \
-    View/enseignantstageview.cpp \
-    View/enseignantview.cpp \
-    View/etudiantview.cpp \
     Tests/testjury.cpp \
-    View/personneview.cpp \
-    View/stageview.cpp \
+    Tests/testprojet.cpp \
+    creneauxdialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    planningdialog.cpp
 
 HEADERS += \
     Controller/csv.h \
@@ -53,32 +49,33 @@ HEADERS += \
     Model/etudiant.h \
     Model/jury.h \
     Model/personne.h \
+    Model/soutenance.h \
     Model/stage.h \
     Tests/csvtest.h \
     Tests/enseignantstagetest.h \
     Tests/enseignanttest.h \
     Tests/etudianttest.h \
-    Tests/integrationtest.h \
     Tests/personnetest.h \
+    Tests/soutenancetest.h \
     Tests/stagetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
     Tests/testcsv.h \
-    View/calendrierview.h \
-    View/creneauvew.h \
-    View/csvview.h \
-    View/enseignantstageview.h \
-    View/enseignantview.h \
-    View/etudiantview.h \
     Tests/testjury.h \
-    View/personneview.h \
-    View/stageview.h \
-    mainwindow.h
+    Tests/testprojet.h \
+    creneauxdialog.h \
+    mainwindow.h \
+    planningdialog.h
 
 FORMS += \
+    PlanningDialog.ui \
+    creneauxdialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    ../../../../../../../Downloads/stage_s7.csv

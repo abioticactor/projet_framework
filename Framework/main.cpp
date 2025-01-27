@@ -1,15 +1,15 @@
 #include "mainwindow.h"
 #include "Tests/personnetest.h"
 #include "Tests/enseignanttest.h"
-
 #include "Tests/testcreneau.h"
 #include "Tests/testcalendrier.h"
 #include "Tests/etudianttest.h"
 #include "Tests/stagetest.h"
 #include "Tests/enseignantstagetest.h"
-#include "Tests/integrationtest.h"
 #include "Tests/csvtest.h"
 #include "Tests/testjury.h"
+#include "Tests/soutenancetest.h"
+#include "Tests/testprojet.h"
 
 
 #include <QApplication>
@@ -20,6 +20,13 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();*/
+
+    QApplication app(argc, argv);
+
+    MainWindow w;
+    w.show();
+
+    return app.exec();
 
     //Test classe Personne
     PersonneTest::runTests();
@@ -45,12 +52,18 @@ int main(int argc, char *argv[])
     //Test classe EnseignantStage
     //EnseignantStageTest::runTests();
 
-    //Test liens
-    //IntegrationTest::runTests();
-
+    //Test CSV
     CSVTest::runTests();
 
+    //Test Soutenance
+    SoutenanceTest::runTests();
 
+    //Test liens
+    TestProjet test;
+    test.extraireDonnees("/Users/tomroyer/Downloads/stage_s7.csv");
+    test.creerEtAssignerCreneaux();
+    test.creerJurysEtAffecterEtudiants();
+    test.afficherToutesLesSoutenances();
 
     return 0;
 }
