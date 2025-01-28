@@ -117,3 +117,11 @@ const std::vector<Soutenance::Affectation>& Soutenance::getAffectations() const
 {
     return m_affectations;
 }
+
+void Soutenance::clearAffectations()
+{
+    m_affectations.clear(); // Efface les affectations
+    etudiants.clear();      // Réinitialise la liste des étudiants
+    jurys.clear();          // Réinitialise la liste des jurys
+}
+

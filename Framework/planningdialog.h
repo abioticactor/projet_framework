@@ -9,6 +9,16 @@
 #include <QHBoxLayout>
 #include <QDate>
 #include <QHeaderView>
+#include <QItemDelegate>
+#include <QApplication>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
+#include <QInputDialog>
+
+
 #include "Tests/TestProjet.h"
 
 class PlanningDialog : public QDialog
@@ -21,6 +31,10 @@ public:
 private slots:
     void onDateChanged();
     void onCloseAll();
+    void onExporterSoutenances();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     TestProjet &m_testProjet;
@@ -28,8 +42,11 @@ private:
     QCalendarWidget *m_calendar;
     QTableWidget    *m_table;
     QPushButton     *m_btnFermer;
+    QPushButton *m_btnExporter;
 
     void remplirTable(const QString &dateStr);
+    QString choisirOrdreExport();
+
 };
 
 #endif // PLANNINGDIALOG_H

@@ -1,5 +1,4 @@
 #include "CreneauxDialog.h"
-#include <QMessageBox>
 
 /*CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     : QDialog(parent),
@@ -68,7 +67,7 @@
 CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     : QDialog(parent), m_testProjet(projet)
 {
-    setWindowTitle("Fenêtre 2 : Créer / Assigner Créneaux");
+    setWindowTitle("Créer / Assigner Créneaux");
 
     // ComboBox pour étudiants
     m_comboEtudiants = new QComboBox(this);
@@ -254,4 +253,15 @@ void CreneauxDialog::onOuvrirPlanning()
 
     // On ferme la 2ème fenêtre
     this->close();
+}
+
+void CreneauxDialog::closeEvent(QCloseEvent *event)
+{
+    if (!m_testProjet.getCreneaux().empty()) {
+        QString fichier = "backup.json";
+        m_testProjet.sauvegarderDonnees(fichier);
+        std::cout << "[Sauvegarde] Données sauvegardées automatiquement.\n";
+    }
+
+    event->accept(); // Accepter la fermeture
 }
