@@ -20,6 +20,17 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "border-radius: 15px; "       // Bordures arrondies
         "padding: 20px; "             // Espace autour des widgets
         "}"
+        "QMessageBox {"
+        "  background-color: #eceae3;"  // Couleur de fond de la QMessageBox
+        "  color: black;"               // Couleur du texte de la QMessageBox (texte en noir)
+        "  border: 1px solid #ccc;"     // Bordure légère
+        "  border-radius: 10px;"        // Bordure arrondie
+        "  padding: 10px;"              // Espacement interne
+        "}"
+        "QMessageBox QLabel {"
+        "  font-size: 14px;"            // Taille de la police dans QMessageBox
+        "  color: black;"               // Couleur du texte (texte noir)
+        "}"
         );
     setWindowTitle("Planning");
 
@@ -50,7 +61,7 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "background-color: #ffbea3; "
         "}"
         "QHeaderView::section { "
-        "background-color: #fff; " // Change ici pour correspondre à la couleur de fond
+        "background-color: #ffbea3; " // Change ici pour correspondre à la couleur de fond
         "color: black; "
         "border: none; "
         "font-weight: bold; "

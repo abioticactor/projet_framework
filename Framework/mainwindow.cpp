@@ -51,6 +51,17 @@ MainWindow::MainWindow(QWidget *parent)
         "  color: #333;"
         "  padding: 5px;"
         "}"
+        "QMessageBox {"
+        "  background-color: #eceae3;"  // Couleur de fond de la QMessageBox
+        "  color: black;"               // Couleur du texte
+        "  border: 1px solid #ccc;"     // Bordure légère
+        "  border-radius: 10px;"        // Bordure arrondie
+        "  padding: 10px;"              // Espacement interne
+        "}"
+        "QMessageBox QLabel {"
+        "  font-size: 14px;"            // Taille de la police dans QMessageBox
+        "  color: black;"               // Couleur du texte dans QMessageBox
+        "}"
         );
 
     // Connexions
@@ -99,6 +110,27 @@ void MainWindow::verifierEtatSauvegarde()
     m_btnSupprimer->setEnabled(sauvegardeExiste);
 }
 
+void MainWindow::supprimerSauvegarde()
+{
+    QString fichier = "backup.json";
+    if (QFile::exists(fichier)) {
+        QFile::remove(fichier);
+        QMessageBox::information(
+            this,
+            "Sauvegarde supprimée",
+            QString("<font color='black'>La sauvegarde a été supprimée avec succès.</font>")
+            );
+    } else {
+        QMessageBox::information(
+            this,
+            "Erreur",
+            QString("<font color='black'>Aucune sauvegarde à supprimer !</font>")
+            );
+    }
+
+    verifierEtatSauvegarde();
+}
+
 void MainWindow::onReprendreSauvegarde()
 {
     QString fichier = "backup.json";
@@ -106,24 +138,15 @@ void MainWindow::onReprendreSauvegarde()
         m_testProjet.restaurerDonnees(fichier);
 
         // Passer à la deuxième fenêtre
-        auto creneauxDialog = new CreneauxDialog(m_testProjet, this); // Garder MainWindow comme parent
+        auto creneauxDialog = new CreneauxDialog(m_testProjet, this);
         creneauxDialog->show();
 
         this->hide(); // Masquer MainWindow au lieu de la fermer
     } else {
-        QMessageBox::warning(this, "Erreur", "Aucune sauvegarde disponible !");
+        QMessageBox::information(
+            this,
+            "Erreur",
+            QString("<font color='black'>Aucune sauvegarde disponible !</font>")
+            );
     }
-}
-
-void MainWindow::supprimerSauvegarde()
-{
-    QString fichier = "backup.json";
-    if (QFile::exists(fichier)) {
-        QFile::remove(fichier);
-        QMessageBox::information(this, "Sauvegarde supprimée", "La sauvegarde a été supprimée avec succès.");
-    } else {
-        QMessageBox::warning(this, "Erreur", "Aucune sauvegarde à supprimer !");
-    }
-
-    verifierEtatSauvegarde();
 }
