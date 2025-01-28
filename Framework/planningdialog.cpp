@@ -57,6 +57,19 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "}"
         );
 
+    m_btnExporter = new QPushButton("Exporter", this); // Bouton Exporter
+    m_btnExporter->setFixedSize(90, 30);
+    m_btnExporter->setStyleSheet(
+        "QPushButton { "
+        "background-color: #68c6fe; "
+        "border-radius: 15px; "
+        "color: white; "
+        "font-weight: bold; "
+        "border: none; "
+        "}"
+        "QPushButton:hover { background-color: #007acc; }"
+        );
+
     m_btnFermer = new QPushButton("Fermer", this);
     m_btnFermer->setFixedSize(90, 30);
     m_btnFermer->setStyleSheet(
@@ -127,13 +140,15 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
     vlay->addWidget(m_btnExporter); // Ajouter le bouton Exporter
     vlay->addWidget(m_btnFermer);
 
-    // Ajouter le bouton dans le coin inférieur droit
+    // Ajouter les boutons "Exporter" et "Fermer" côte à côte
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addStretch();
-    buttonLayout->addWidget(m_btnFermer);
-    vlay->addLayout(buttonLayout);
-    m_btnExporter = new QPushButton("Exporter", this); // Bouton Exporter
-    m_btnFermer = new QPushButton("Fermer", this);
+    buttonLayout->addWidget(m_btnExporter); // Bouton "Exporter"
+    buttonLayout->addSpacing(10);          // Espace entre les deux boutons
+    buttonLayout->addWidget(m_btnFermer);  // Bouton "Fermer"
+
+    vlay->addLayout(buttonLayout); // Ajouter le layout des boutons à la fenêtre principale
+    setLayout(vlay);
 
     setLayout(vlay);
 

@@ -1,75 +1,5 @@
-/*#include "mainwindow.h"
-#include "ui_mainwindow.h"
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}*/
-
 #include "MainWindow.h"
 
-/*MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-{
-    this->setWindowTitle("Charger CSV");
-
-    m_centralWidget = new QWidget(this);
-    setCentralWidget(m_centralWidget);
-
-    m_btnChargerCsv = new QPushButton("Charger un fichier CSV", this);
-    m_labelInfo     = new QLabel("Aucun fichier chargé.", this);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(m_btnChargerCsv);
-    layout->addWidget(m_labelInfo);
-
-    m_centralWidget->setLayout(layout);
-    setStyleSheet(
-        "MainWindow { "
-        "background-color: #eceae3; "  // Couleur de fond autour
-        "border-radius: 15px; "       // Bordures arrondies
-        "padding: 20px; "             // Espace autour des widgets
-        "}"
-        );
-
-    QString buttonStyle = "QPushButton {"
-                          "  background-color: #fed0bc;"
-                          "  color: black;"
-                          "  border: none;"
-                          "  border-radius: 5px;"
-                          "  padding: 10px 15px;"
-                          "  font-size: 14px;"
-                          "}"
-                          "QPushButton:hover {"
-                          "  background-color: #fca691;"
-                          "}"
-                          "QPushButton:pressed {"
-                          "  background-color: #fca691;"
-                          "}";
-
-    QString labelStyle = "QLabel {"
-                         "  font-size: 14px;"
-                         "  color: #333;"
-                         "  padding: 5px;"
-                         "}";
-
-    // Appliquer le style
-    m_btnChargerCsv->setStyleSheet(buttonStyle);
-    m_labelInfo->setStyleSheet(labelStyle);
-
-    // Connexion
-    connect(m_btnChargerCsv, &QPushButton::clicked,
-            this, &MainWindow::onChargerCsv);
-
-
-}*/
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -95,6 +25,34 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_centralWidget->setLayout(layout);
 
+    // Définir les styles CSS
+    setStyleSheet(
+        "MainWindow { "
+        "  background-color: #eceae3; "  // Couleur de fond
+        "  border-radius: 15px; "       // Bordures arrondies
+        "  padding: 20px; "             // Espace autour des widgets
+        "}"
+        "QPushButton {"
+        "  background-color: #fed0bc;"
+        "  color: black;"
+        "  border: none;"
+        "  border-radius: 5px;"
+        "  padding: 10px 15px;"
+        "  font-size: 14px;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: #fca691;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: #fca691;"
+        "}"
+        "QLabel {"
+        "  font-size: 14px;"
+        "  color: #333;"
+        "  padding: 5px;"
+        "}"
+        );
+
     // Connexions
     connect(m_btnChargerCsv, &QPushButton::clicked,
             this, &MainWindow::onChargerCsv);
@@ -105,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     verifierEtatSauvegarde();
 }
-
 
 MainWindow::~MainWindow()
 {
@@ -141,7 +98,6 @@ void MainWindow::verifierEtatSauvegarde()
     m_btnReprendre->setEnabled(sauvegardeExiste);
     m_btnSupprimer->setEnabled(sauvegardeExiste);
 }
-
 
 void MainWindow::onReprendreSauvegarde()
 {

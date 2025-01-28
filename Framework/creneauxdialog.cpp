@@ -146,8 +146,8 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
                             "  background-color: white;"
                             "}"
                             "QCheckBox::indicator:checked {"
-                            "  background-color: #0078d7;"
-                            "  border-color: #ffb787;"
+                            "  background-color: #fed0bc;"
+                            "  border-color: #ffb7ac;"
                             "}";
     m_ckTousEtudiants->setStyleSheet(checkBoxStyle);
     m_ckTousEnseignants->setStyleSheet(checkBoxStyle);
@@ -162,7 +162,7 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
                           "}"
                           "QPushButton:hover {"
                           "  background-color: #fdd0af;"
-                          "  border-color: #003f7f;"
+                          "  border-color: #fe988c;"
                           "}"
                           "QPushButton:pressed {"
                           "  background-color: #fe988c;"
