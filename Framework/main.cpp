@@ -16,18 +16,21 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
 
+    /*QApplication a(argc, argv);
     MainWindow w;
     w.show();
+    return a.exec();*/
 
-    return app.exec();
 
     //Test classe Personne
     PersonneTest::runTests();
 
     //Test classe Enseignant
     EnseignantTest::runTests();
+
+    //Test classe Etudiant
+    EtudiantTest::runTests();
 
     //Test classe Créneau
     TestCreneau::runTests();
@@ -38,20 +41,14 @@ int main(int argc, char *argv[])
     //Test classe Jury
     TestJury::runTests();
 
-    //Test classe Etudiant
-    EtudiantTest::runTests();
-
     //Test classe Stage
     StageTest::runTests();
 
-    //Test classe EnseignantStage
-    //EnseignantStageTest::runTests();
+    //Test Soutenance
+    SoutenanceTest::runTests();
 
     //Test CSV
     CSVTest::runTests();
-
-    //Test Soutenance
-    SoutenanceTest::runTests();
 
     //Test liens
     TestProjet test;
@@ -59,6 +56,13 @@ int main(int argc, char *argv[])
     test.creerEtAssignerCreneaux();
     test.creerJurysEtAffecterEtudiants();
     test.afficherToutesLesSoutenances();
+
+    QApplication app(argc, argv);
+
+    MainWindow w;
+    w.show();
+
+    return app.exec();
 
     return 0;
 }
