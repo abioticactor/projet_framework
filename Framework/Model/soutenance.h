@@ -10,7 +10,7 @@
 #include <iostream>
 
 class Soutenance {
-private:
+public:
     std::vector<std::shared_ptr<Etudiant>> etudiants;  // Liste des étudiants gérés
     std::vector<std::shared_ptr<Jury>> jurys;          // Liste des jurys assignés
     std::shared_ptr<Calendrier> calendrier;           // Calendrier global pour la soutenance

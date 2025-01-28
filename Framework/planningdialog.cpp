@@ -50,7 +50,7 @@ void PlanningDialog::remplirTable(const QString &dateStr)
     m_table->clearContents();
     m_table->setRowCount(0);
 
-    const auto& affectations = m_testProjet.getSoutenance().getAffectations();
+    const std::vector<Soutenance::Affectation>& affectations = m_testProjet.getSoutenance().getAffectations();
 
     int row = 0;
     for (const auto& aff : affectations) {

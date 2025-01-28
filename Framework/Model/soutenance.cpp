@@ -102,12 +102,14 @@ void Soutenance::assigner(const std::shared_ptr<Etudiant>& etu,
     // Option : si vous voulez être sûr de ne pas dupliquer un étudiant
     // ou un jury dans vos vecteurs, vous pouvez vérifier avant de push_back.
     // Ou bien vous laissez tel quel.
+
     etudiants.push_back(etu);
     jurys.push_back(jury);
 
     // On construit la triple liaison
     Affectation aff{ etu, jury, creneau };
     m_affectations.push_back(aff);
+
 }
 
 // Accesseur

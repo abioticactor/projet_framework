@@ -51,6 +51,13 @@ public:
     const std::vector<std::shared_ptr<Enseignant>>& getEnseignants() const {
         return m_enseignants;
     }
+
+    std::vector<std::shared_ptr<Creneau>>& getCreneaux() {
+        return m_creneaux;
+    }
+    const std::vector<std::shared_ptr<Creneau>>& getCreneaux() const {
+        return m_creneaux;
+    }
 };
 
 #endif // TESTPROJET_H
