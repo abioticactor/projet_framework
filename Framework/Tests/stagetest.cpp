@@ -1,48 +1,54 @@
 #include "Tests/stagetest.h"
 
 void StageTest::runTests() {
-    std::cout << "Démarrage des tests pour la classe Stage...\n";
+    std::cout << "\nDEBUT des tests pour la Classe STAGE\n" << std::endl;
     testConstructeur();
-    testGetSetEntreprise();
-    testGetSetTitre();
-    testGetSetTuteur();
-    std::cout << "Tous les tests de la classe Stage ont réussi avec succès !\n";
+    testSetters();
+    std::cout << "\nFIN des tests pour la Classe STAGE\n" << std::endl;
 }
 
 void StageTest::testConstructeur() {
     auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
     Stage stage("Google", "Développeur", tuteur);
-
-    assert(stage.getEntreprise() == "Google");
-    assert(stage.getTitre() == "Développeur");
-    assert(stage.getTuteur()->getNom() == "Dupont");
-    std::cout << "Test constructeur : OK\n";
+    int score=0;
+    if (stage.getEntreprise() == "Google"){
+        //std::cout << "Test getEntreprise: OK " << std::endl;
+        score+=1;
+    }
+    if (stage.getTitre() == "Développeur"){
+        //std::cout << "Test getTitre: OK " << std::endl;
+        score+=1;
+    }
+    if (stage.getTuteur()->getNom() == "Dupont"){
+        //std::cout << "Test getNom: OK " << std::endl;
+        score+=1;
+    }
+    std::cout << "Test Constructeur: " << score << "/3" << std::endl;
 }
 
-void StageTest::testGetSetEntreprise() {
+void StageTest::testSetters() {
     auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
+    auto tuteur2 = std::make_shared<Enseignant>("Martin", "Paul");
     Stage stage("Google", "Développeur", tuteur);
 
     stage.setEntreprise("Amazon");
-    assert(stage.getEntreprise() == "Amazon");
-    std::cout << "Test get/set Entreprise : OK\n";
-}
-
-void StageTest::testGetSetTitre() {
-    auto tuteur = std::make_shared<Enseignant>("Dupont", "Jean");
-    Stage stage("Google", "Développeur", tuteur);
-
     stage.setTitre("Data Scientist");
-    assert(stage.getTitre() == "Data Scientist");
-    std::cout << "Test get/set Titre : OK\n";
-}
-
-void StageTest::testGetSetTuteur() {
-    auto tuteur1 = std::make_shared<Enseignant>("Dupont", "Jean");
-    auto tuteur2 = std::make_shared<Enseignant>("Martin", "Paul");
-    Stage stage("Google", "Développeur", tuteur1);
-
     stage.setTuteur(tuteur2);
-    assert(stage.getTuteur()->getNom() == "Martin");
-    std::cout << "Test get/set Tuteur : OK\n";
+
+    int score=0;
+    if (stage.getEntreprise() == "Amazon"){
+        //std::cout << "Test setEntreprise: OK " << std::endl;
+        score+=1;
+    }
+    if (stage.getTitre() == "Data Scientist"){
+        //std::cout << "Test setTitre: OK " << std::endl;
+        score+=1;
+    }
+    if (stage.getTuteur()->getNom() == "Martin"){
+        //std::cout << "Test setTuteur: OK " << std::endl;
+        score+=1;
+    }
+    std::cout << "Test Setters: " << score << "/3" << std::endl;
 }
+
+

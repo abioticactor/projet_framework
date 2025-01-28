@@ -11,9 +11,9 @@ void TestCreneau::runTests(){
 }
 
 void TestCreneau::testConstructeur(){
-    Creneau creneau=Creneau("14/10/24","10:45");
+    Creneau creneau=Creneau("2024-10-14","10:45");
     int score=0;
-    if (creneau.getDate()=="14/10/24"){
+    if (creneau.getDate()=="2024-10-14"){
         //std::cout << "Test getDate: OK" << std::endl;
         score+=1;
     }
@@ -25,11 +25,11 @@ void TestCreneau::testConstructeur(){
 }
 
 void TestCreneau::testSetters(){
-    Creneau creneau=Creneau("14/10/24","10:45");
-    creneau.setDate("16/12/24");
+    Creneau creneau=Creneau("2024-10-14","10:45");
+    creneau.setDate("2024-12-16");
     creneau.setHeure("11:00");
     int score=0;
-    if (creneau.getDate()=="16/12/24"){
+    if (creneau.getDate()=="2024-12-16"){
         //std::cout << "Test setDate: OK" << std::endl;
         score+=1;
     }
@@ -41,14 +41,14 @@ void TestCreneau::testSetters(){
 }
 
 void TestCreneau::testOperateurs(){
-    Creneau c1=Creneau("14/10/24","10:45");
-    Creneau c2=Creneau("14/10/24","10:45");
+    Creneau c1=Creneau("2024-12-14","10:45");
+    Creneau c2=Creneau("2024-12-14","10:45");
 
-    Creneau c3=Creneau("14/10/24","11:00");
-    Creneau c4=Creneau("15/10/24","09:00");
+    Creneau c3=Creneau("2024-12-14","11:00");
+    Creneau c4=Creneau("2024-12-15","09:00");
 
-    Creneau c5=Creneau("14/10/24","09:00");
-    Creneau c6=Creneau("13/10/24","15:45");
+    Creneau c5=Creneau("2024-12-14","09:00");
+    Creneau c6=Creneau("2024-12-13","15:45");
 
     int score=0;
     if (c1==c2){

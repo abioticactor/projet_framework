@@ -1,54 +1,49 @@
 #include "Tests/personnetest.h"
 
 void PersonneTest::runTests() {
-    std::cout << "Démarrage des tests pour la classe Personne...\n";
+    std::cout << "\nDEBUT des tests pour la Classe PERSONNE\n" << std::endl;
     testConstructeur();
-    testGetNom();
-    testSetNom();
-    testGetPrenom();
-    testSetPrenom();
-    testGetId();
-    std::cout << "Tous les tests de la classe Personne ont réussi avec succès !\n";
+    testSetters();
+    std::cout << "\nFIN des tests pour la Classe PERSONNE\n" << std::endl;
 }
 
 void PersonneTest::testConstructeur() {
     Personne personne("Royer", "Tom");
-    assert(personne.getNom() == "Royer");
-    assert(personne.getPrenom() == "Tom");
-    assert(personne.getId() == 1);
-    std::cout << "Test constructeur : OK\n";
-}
-
-void PersonneTest::testGetNom() {
-    Personne personne1("Jozwiak", "Corentin");
-    assert(personne1.getNom() == "Jozwiak");
-    std::cout << "Test getNom : OK\n";
-}
-
-void PersonneTest::testSetNom() {
     Personne personne2("Theuil", "Martin");
-    personne2.setNom("Bob");
-    assert(personne2.getNom() == "Bob");
-    std::cout << "Test setNom : OK\n";
+    int score=0;
+    if (personne.getNom() == "Royer"){
+        //std::cout << "Test getNom: OK " << std::endl;
+        score+=1;
+    }
+    if (personne.getPrenom() == "Tom"){
+        //std::cout << "Test getPrenom: OK " << std::endl;
+        score+=1;
+    }
+    if (personne.getId() == 1){
+        //std::cout << "Test getId: OK " << std::endl;
+        score+=1;
+    }
+    if (personne2.getId() == 2){
+        //std::cout << "Test getId2 : OK " << std::endl;
+        score+=1;
+    }
+    std::cout << "Test Constructeur: " << score << "/4" << std::endl;
 }
 
-void PersonneTest::testGetPrenom() {
-    Personne personne3("Theuil", "Martin");
-    assert(personne3.getPrenom() == "Martin");
-    std::cout << "Test getPrenom : OK\n";
-}
-
-void PersonneTest::testSetPrenom() {
+void PersonneTest::testSetters() {
     Personne personne4("Alice", "Smith");
+    personne4.setNom("Bob");
     personne4.setPrenom("Brown");
-    assert(personne4.getPrenom() == "Brown");
-    std::cout << "Test setPrenom : OK\n";
+    int score=0;
+    if (personne4.getNom()=="Bob"){
+        //std::cout << "Test setNom: OK " << std::endl;
+        score+=1;
+    }
+    if (personne4.getPrenom()=="Brown"){
+        //std::cout << "Test setPrenom: OK " << std::endl;
+        score+=1;
+    }
+    std::cout << "Test Setters: " << score << "/2" << std::endl;
 }
 
-void PersonneTest::testGetId() {
-    Personne personne5("John", "Doe");
-    Personne personne6("Jane", "Doe");
-    assert(personne5.getId() == 6);
-    assert(personne6.getId() == 7);
-    std::cout << "Test getId : OK\n";
-}
+

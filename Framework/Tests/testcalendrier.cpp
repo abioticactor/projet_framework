@@ -11,8 +11,8 @@ void TestCalendrier::runTests() {
 }
 
 void TestCalendrier::testAjouteRetireCreneau() {
-    auto creneau1 = std::make_shared<Creneau>("14/10/24", "10:45");
-    auto creneau2 = std::make_shared<Creneau>("15/10/24", "12:45");
+    auto creneau1 = std::make_shared<Creneau>("2024-12-14", "10:45");
+    auto creneau2 = std::make_shared<Creneau>("2024-12-15", "12:45");
     Calendrier c = Calendrier();
     c.ajouteCreneau(creneau1);
     c.ajouteCreneau(creneau2);
@@ -36,9 +36,9 @@ void TestCalendrier::testAjouteRetireCreneau() {
 }
 
 void TestCalendrier::testDispo() {
-    auto creneau1 = std::make_shared<Creneau>("14/10/24", "10:45");
-    auto creneau2 = std::make_shared<Creneau>("15/10/24", "12:45");
-    auto creneau3 = std::make_shared<Creneau>("14/10/24", "10:45");
+    auto creneau1 = std::make_shared<Creneau>("2024-12-14", "10:45");
+    auto creneau2 = std::make_shared<Creneau>("2024-12-15", "12:45");
+    auto creneau3 = std::make_shared<Creneau>("2024-12-14", "10:45");
     Calendrier c = Calendrier();
     c.ajouteCreneau(creneau1);
     int score = 0;
@@ -53,10 +53,10 @@ void TestCalendrier::testDispo() {
 
 void TestCalendrier::testTri() {
     int score = 0;
-    auto creneau1 = std::make_shared<Creneau>("14/10/24", "10:45");
-    auto creneau2 = std::make_shared<Creneau>("14/10/24", "11:45");
-    auto creneau3 = std::make_shared<Creneau>("15/10/24", "12:45");
-    auto creneau4 = std::make_shared<Creneau>("16/10/24", "09:45");
+    auto creneau1 = std::make_shared<Creneau>("2024-12-14", "10:45");
+    auto creneau2 = std::make_shared<Creneau>("2024-12-14", "11:45");
+    auto creneau3 = std::make_shared<Creneau>("2024-12-15", "12:45");
+    auto creneau4 = std::make_shared<Creneau>("2024-12-16", "09:45");
     Calendrier c_ordo = Calendrier();
     Calendrier c_desordo = Calendrier();
     c_ordo.ajouteCreneau(creneau1);

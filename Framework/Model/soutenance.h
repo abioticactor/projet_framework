@@ -53,6 +53,8 @@ public:
     // NOUVEAU : accès à la liste des affectations
     const std::vector<Affectation>& getAffectations() const;
 
+    void clearAffectations(); // Efface toutes les affectations
+
 
 };
 

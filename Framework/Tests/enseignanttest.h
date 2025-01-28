@@ -14,10 +14,8 @@ private:
     // Tests individuels
     static void testConstructeur();
     static void testAjouterCompetence();
-    static void testGetCompetences();
     static void testPossedeCompetence();
-    static void testAjouterDisponibilite();
-    static void testRetirerDisponibilite();
+    static void testAjouterRetirerDispo();
 };
 
 #endif // ENSEIGNANTTEST_H

@@ -13,11 +13,7 @@ public:
 private:
     // Tests individuels
     static void testConstructeur();
-    static void testGetNom();
-    static void testSetNom();
-    static void testGetPrenom();
-    static void testSetPrenom();
-    static void testGetId();
+    static void testSetters();
 };
 
 #endif // PERSONNETEST_H

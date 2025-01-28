@@ -2,10 +2,75 @@
 #include <QMessageBox>
 #include <QCalendarWidget>
 
+
+/*CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
+    : QDialog(parent),
+    m_testProjet(projet)
+{
+    setWindowTitle("Fenêtre 2 : Créer / Assigner Creneaux");
+
+    // ComboBox pour étudiants
+    m_comboEtudiants = new QComboBox(this);
+    m_ckTousEtudiants = new QCheckBox("Tous les étudiants ?", this);
+
+    // On peuple la combo avec la liste d’étudiants du TestProjet
+    for (auto &etu : m_testProjet.getEtudiants()) {
+        QString nom = QString::fromStdString(etu->getNom())
+        + " "
+            + QString::fromStdString(etu->getPrenom());
+        m_comboEtudiants->addItem(nom, QVariant::fromValue((void*)etu.get()));
+        // ou on stocke un index autrement
+    }
+
+    // ComboBox pour enseignants
+    m_comboEnseignants = new QComboBox(this);
+    m_ckTousEnseignants = new QCheckBox("Tous les enseignants ?", this);
+
+    for (auto &ens : m_testProjet.getEnseignants()) {
+        QString nom = QString::fromStdString(ens->getNom());
+        m_comboEnseignants->addItem(nom, QVariant::fromValue((void*)ens.get()));
+    }
+
+    // QDateTimeEdit pour la date+heure
+    m_dateTimeEdit = new QDateTimeEdit(this);
+    m_dateTimeEdit->setDisplayFormat("yyyy-MM-dd HH:mm");
+    m_dateTimeEdit->setDateTime(QDateTime(QDate(2025,1,1), QTime(9,0)));
+
+    // Boutons
+    m_btnValider   = new QPushButton("Valider le Créneau", this);
+    m_btnPlanning  = new QPushButton("Ouvrir Planning", this);
+
+    // Layout
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->addWidget(new QLabel("Choisir un étudiant :"));
+    layout->addWidget(m_comboEtudiants);
+    layout->addWidget(m_ckTousEtudiants);
+
+    layout->addWidget(new QLabel("Choisir un enseignant :"));
+    layout->addWidget(m_comboEnseignants);
+    layout->addWidget(m_ckTousEnseignants);
+
+    layout->addWidget(new QLabel("Date/Heure du créneau :"));
+    layout->addWidget(m_dateTimeEdit);
+
+    layout->addWidget(m_btnValider);
+    layout->addWidget(m_btnPlanning);
+
+    setLayout(layout);
+
+    // Connect
+    connect(m_btnValider, &QPushButton::clicked,
+            this, &CreneauxDialog::onValiderCreneau);
+
+    connect(m_btnPlanning, &QPushButton::clicked,
+            this, &CreneauxDialog::onOuvrirPlanning);
+}*/
+
 CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     : QDialog(parent), m_testProjet(projet)
 {
-    setWindowTitle("Fenêtre 2 : Créer / Assigner Créneaux");
+    setWindowTitle("Créer / Assigner Créneaux");
 
     // Application du style général
     setStyleSheet("QDialog { background-color: #f4f4f4; font-family: Arial, sans-serif; }");
@@ -243,4 +308,15 @@ void CreneauxDialog::onOuvrirPlanning()
 
     // On ferme la 2ème fenêtre
     this->close();
+}
+
+void CreneauxDialog::closeEvent(QCloseEvent *event)
+{
+    if (!m_testProjet.getCreneaux().empty()) {
+        QString fichier = "backup.json";
+        m_testProjet.sauvegarderDonnees(fichier);
+        std::cout << "[Sauvegarde] Données sauvegardées automatiquement.\n";
+    }
+
+    event->accept(); // Accepter la fermeture
 }

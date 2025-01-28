@@ -14,12 +14,11 @@ MainWindow::~MainWindow()
 }*/
 
 #include "MainWindow.h"
-#include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent)
+/*MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    this->setWindowTitle("Fenêtre 1 : Charger CSV");
+    this->setWindowTitle("Charger CSV");
 
     m_centralWidget = new QWidget(this);
     setCentralWidget(m_centralWidget);
@@ -68,7 +67,45 @@ MainWindow::MainWindow(QWidget *parent)
     // Connexion
     connect(m_btnChargerCsv, &QPushButton::clicked,
             this, &MainWindow::onChargerCsv);
+
+
+}*/
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+{
+    this->setWindowTitle("Fenêtre 1 : Charger CSV");
+
+    m_centralWidget = new QWidget(this);
+    setCentralWidget(m_centralWidget);
+
+    m_btnChargerCsv = new QPushButton("Charger un fichier CSV", this);
+    m_labelInfo     = new QLabel("Aucun fichier chargé.", this);
+
+    m_btnReprendre  = new QPushButton("Reprendre sauvegarde", this);
+    m_btnSupprimer  = new QPushButton("Supprimer sauvegarde", this);
+
+    m_btnReprendre->setEnabled(false);
+    m_btnSupprimer->setEnabled(false);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(m_btnChargerCsv);
+    layout->addWidget(m_labelInfo);
+    layout->addWidget(m_btnReprendre);
+    layout->addWidget(m_btnSupprimer);
+
+    m_centralWidget->setLayout(layout);
+
+    // Connexions
+    connect(m_btnChargerCsv, &QPushButton::clicked,
+            this, &MainWindow::onChargerCsv);
+    connect(m_btnReprendre, &QPushButton::clicked,
+            this, &MainWindow::onReprendreSauvegarde);
+    connect(m_btnSupprimer, &QPushButton::clicked,
+            this, &MainWindow::supprimerSauvegarde);
+
+    verifierEtatSauvegarde();
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -96,3 +133,41 @@ void MainWindow::onChargerCsv()
     this->close();
 }
 
+void MainWindow::verifierEtatSauvegarde()
+{
+    QString fichier = "backup.json";
+    bool sauvegardeExiste = QFile::exists(fichier);
+
+    m_btnReprendre->setEnabled(sauvegardeExiste);
+    m_btnSupprimer->setEnabled(sauvegardeExiste);
+}
+
+
+void MainWindow::onReprendreSauvegarde()
+{
+    QString fichier = "backup.json";
+    if (QFile::exists(fichier)) {
+        m_testProjet.restaurerDonnees(fichier);
+
+        // Passer à la deuxième fenêtre
+        auto creneauxDialog = new CreneauxDialog(m_testProjet, this); // Garder MainWindow comme parent
+        creneauxDialog->show();
+
+        this->hide(); // Masquer MainWindow au lieu de la fermer
+    } else {
+        QMessageBox::warning(this, "Erreur", "Aucune sauvegarde disponible !");
+    }
+}
+
+void MainWindow::supprimerSauvegarde()
+{
+    QString fichier = "backup.json";
+    if (QFile::exists(fichier)) {
+        QFile::remove(fichier);
+        QMessageBox::information(this, "Sauvegarde supprimée", "La sauvegarde a été supprimée avec succès.");
+    } else {
+        QMessageBox::warning(this, "Erreur", "Aucune sauvegarde à supprimer !");
+    }
+
+    verifierEtatSauvegarde();
+}

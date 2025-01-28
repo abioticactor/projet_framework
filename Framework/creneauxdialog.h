@@ -9,6 +9,12 @@
 #include <QDateTimeEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QFile>
+
+
+
 #include "Tests/TestProjet.h"
 #include "PlanningDialog.h"
 
@@ -22,6 +28,9 @@ public:
 private slots:
     void onValiderCreneau();
     void onOuvrirPlanning();
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 
 private:
     TestProjet &m_testProjet;

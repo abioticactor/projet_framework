@@ -13,13 +13,8 @@ public:
 private:
     // Tests individuels
     static void testConstructeur();
-    static void testGetSetClasse();
-    static void testGetSetOptions();
-    static void testAjouterDisponibiliteEtudiant();
-    static void testRetirerDisponibiliteEtudiant();
-    static void testGetDisponibilitesEtudiant();
-    static void testAssignationStage();
-    static void testGetSetStage();
+    static void testSetters();
+    static void testAjouterRetirerDispo();
 };
 
 #endif // ETUDIANTTEST_H
