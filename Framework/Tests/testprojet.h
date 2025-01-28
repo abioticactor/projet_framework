@@ -5,13 +5,23 @@
 #include <vector>
 #include <memory>
 #include "Controller/CSVHandler.h"
-#include "Model/Etudiant.h"
-#include "Model/Enseignant.h"
-#include "Model/Stage.h"
-#include "Model/Creneau.h"
-#include "Model/Jury.h"
-#include "Model/Soutenance.h"
+#include "Model/etudiant.h"
+#include "Model/enseignant.h"
+#include "Model/stage.h"
+#include "Model/creneau.h"
+#include "Model/jury.h"
+#include "Model/soutenance.h"
 #include <unordered_set>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QFile>
+
+
+
 
 
 class TestProjet {
@@ -58,6 +68,10 @@ public:
     const std::vector<std::shared_ptr<Creneau>>& getCreneaux() const {
         return m_creneaux;
     }
+    void sauvegarderDonnees(const QString &fichier) const;
+    void restaurerDonnees(const QString &fichier);
+
+
 };
 
 #endif // TESTPROJET_H

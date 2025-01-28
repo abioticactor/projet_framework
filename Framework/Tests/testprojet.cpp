@@ -1,7 +1,5 @@
 #include "TestProjet.h"
-#include <iostream>
-#include <algorithm>
-#include <unordered_map>
+
 
 // 1) Extraction des données depuis le CSV
 void TestProjet::extraireDonnees(const std::string& cheminCsv)
@@ -345,4 +343,156 @@ void TestProjet::afficherToutesLesSoutenances() const
     }
 
     std::cout << "=== Fin du recapitulatif ===\n";
+}
+
+void TestProjet::sauvegarderDonnees(const QString &fichier) const
+{
+    if (m_creneaux.empty()) {
+        std::cerr << "Aucune sauvegarde à effectuer : aucun créneau enregistré.\n";
+        return;
+    }
+
+    QJsonObject sauvegarde;
+
+    // Sauvegarde des créneaux
+    QJsonArray creneauxArray;
+    for (const auto &creneau : m_creneaux) {
+        QJsonObject creneauObj;
+        creneauObj["date"] = QString::fromStdString(creneau->getDate());
+        creneauObj["heure"] = QString::fromStdString(creneau->getHeure());
+        creneauxArray.append(creneauObj);
+    }
+    sauvegarde["creneaux"] = creneauxArray;
+
+    // Sauvegarde des étudiants
+    QJsonArray etudiantsArray;
+    for (const auto &etu : m_etudiants) {
+        QJsonObject etuObj;
+        etuObj["nom"] = QString::fromStdString(etu->getNom());
+        etuObj["prenom"] = QString::fromStdString(etu->getPrenom());
+        etudiantsArray.append(etuObj);
+    }
+    sauvegarde["etudiants"] = etudiantsArray;
+
+    // Sauvegarde des enseignants
+    QJsonArray enseignantsArray;
+    for (const auto &ens : m_enseignants) {
+        QJsonObject ensObj;
+        ensObj["nom"] = QString::fromStdString(ens->getNom());
+        enseignantsArray.append(ensObj);
+    }
+    sauvegarde["enseignants"] = enseignantsArray;
+
+    // Sauvegarde des stages
+    QJsonArray stagesArray;
+    for (const auto &stage : m_stages) {
+        QJsonObject stageObj;
+        stageObj["titre"] = QString::fromStdString(stage->getTitre());
+        stageObj["entreprise"] = QString::fromStdString(stage->getEntreprise());
+        stageObj["tuteur"] = QString::fromStdString(stage->getTuteur()->getNom());
+        stagesArray.append(stageObj);
+    }
+    sauvegarde["stages"] = stagesArray;
+
+    // Sauvegarde des affectations
+    QJsonArray affectationsArray;
+    for (const auto &aff : m_soutenance.getAffectations()) {
+        QJsonObject affObj;
+        affObj["etudiant"] = QString::fromStdString(aff.etu->getNom());
+        affObj["jury_president"] = QString::fromStdString(aff.jury->getPresident()->getNom());
+        affObj["jury_cojury"] = QString::fromStdString(aff.jury->getCojury()->getNom());
+        affObj["creneau_date"] = QString::fromStdString(aff.creneau->getDate());
+        affObj["creneau_heure"] = QString::fromStdString(aff.creneau->getHeure());
+        affectationsArray.append(affObj);
+    }
+    sauvegarde["affectations"] = affectationsArray;
+
+    // Écrire dans un fichier
+    QFile file(fichier);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(sauvegarde).toJson());
+        file.close();
+        std::cout << "Sauvegarde effectuée dans " << fichier.toStdString() << "\n";
+    }
+}
+
+
+void TestProjet::restaurerDonnees(const QString &fichier)
+{
+    QFile file(fichier);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Impossible d'ouvrir le fichier de sauvegarde : " << fichier.toStdString() << "\n";
+        return;
+    }
+
+    QByteArray saveData = file.readAll();
+    file.close();
+
+    QJsonDocument document = QJsonDocument::fromJson(saveData);
+    QJsonObject sauvegarde = document.object();
+
+    // Restaurer les créneaux
+    m_creneaux.clear();
+    QJsonArray creneauxArray = sauvegarde["creneaux"].toArray();
+    for (const auto &c : creneauxArray) {
+        QJsonObject creneauObj = c.toObject();
+        auto creneau = std::make_shared<Creneau>(creneauObj["date"].toString().toStdString(),
+                                                 creneauObj["heure"].toString().toStdString());
+        m_creneaux.push_back(creneau);
+    }
+
+    // Restaurer les étudiants
+    m_etudiants.clear();
+    QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
+    for (const auto &e : etudiantsArray) {
+        QJsonObject etuObj = e.toObject();
+        auto etu = std::make_shared<Etudiant>(etuObj["nom"].toString().toStdString(),
+                                              etuObj["prenom"].toString().toStdString(),
+                                              "", std::vector<std::string>());
+        m_etudiants.push_back(etu);
+    }
+
+    // Restaurer les enseignants
+    m_enseignants.clear();
+    QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
+    for (const auto &e : enseignantsArray) {
+        QJsonObject ensObj = e.toObject();
+        auto ens = std::make_shared<Enseignant>(ensObj["nom"].toString().toStdString(),
+                                                "", std::vector<std::string>());
+        m_enseignants.push_back(ens);
+    }
+
+    // Restaurer les stages
+    m_stages.clear();
+    QJsonArray stagesArray = sauvegarde["stages"].toArray();
+    for (const auto &s : stagesArray) {
+        QJsonObject stageObj = s.toObject();
+        auto tuteur = std::make_shared<Enseignant>(stageObj["tuteur"].toString().toStdString(),
+                                                   "", std::vector<std::string>());
+        auto stage = std::make_shared<Stage>(stageObj["entreprise"].toString().toStdString(),
+                                             stageObj["titre"].toString().toStdString(), tuteur);
+        m_stages.push_back(stage);
+    }
+
+    // Restaurer les affectations
+    m_soutenance.clearAffectations(); // Nettoyer les affectations existantes
+    QJsonArray affectationsArray = sauvegarde["affectations"].toArray();
+    for (const auto &aff : affectationsArray) {
+        QJsonObject affObj = aff.toObject();
+        auto etu = std::find_if(m_etudiants.begin(), m_etudiants.end(),
+                                [&](auto &e) { return e->getNom() == affObj["etudiant"].toString().toStdString(); });
+        auto president = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                      [&](auto &e) { return e->getNom() == affObj["jury_president"].toString().toStdString(); });
+        auto cojury = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                   [&](auto &e) { return e->getNom() == affObj["jury_cojury"].toString().toStdString(); });
+        auto creneau = std::find_if(m_creneaux.begin(), m_creneaux.end(),
+                                    [&](auto &c) { return c->getDate() == affObj["creneau_date"].toString().toStdString() &&
+                                                          c->getHeure() == affObj["creneau_heure"].toString().toStdString(); });
+
+        if (etu != m_etudiants.end() && president != m_enseignants.end() &&
+            cojury != m_enseignants.end() && creneau != m_creneaux.end()) {
+            auto jury = std::make_shared<Jury>(*president, *cojury);
+            m_soutenance.assigner(*etu, jury, *creneau);
+        }
+    }
 }

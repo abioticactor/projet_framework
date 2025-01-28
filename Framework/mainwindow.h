@@ -31,6 +31,9 @@ private:
 #include <QFileDialog>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QMessageBox>
+
+
 
 #include "Tests/TestProjet.h"
 #include "CreneauxDialog.h"
@@ -45,6 +48,17 @@ public:
 
 private slots:
     void onChargerCsv();
+
+private:
+    QPushButton *m_btnReprendre;
+    QPushButton *m_btnSupprimer;
+
+    void verifierEtatSauvegarde();
+    void supprimerSauvegarde();
+    void onReprendreSauvegarde();
+
+
+
 
 private:
     QWidget     *m_centralWidget;
