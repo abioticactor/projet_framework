@@ -211,9 +211,19 @@ void PlanningDialog::remplirTable(const QString &dateStr)
             QString etu = QString::fromStdString(aff.etu->getNom()) + " " + QString::fromStdString(aff.etu->getPrenom());
             QString jury = QString::fromStdString(aff.jury->getPresident()->getNom()) + " & " + QString::fromStdString(aff.jury->getCojury()->getNom());
 
-            m_table->setItem(row, 0, new QTableWidgetItem(heure));
-            m_table->setItem(row, 1, new QTableWidgetItem(etu));
-            m_table->setItem(row, 2, new QTableWidgetItem(jury));
+            // Création des items avec drapeaux non éditables
+            QTableWidgetItem *heureItem = new QTableWidgetItem(heure);
+            heureItem->setFlags(heureItem->flags() & ~Qt::ItemIsEditable);
+
+            QTableWidgetItem *etuItem = new QTableWidgetItem(etu);
+            etuItem->setFlags(etuItem->flags() & ~Qt::ItemIsEditable);
+
+            QTableWidgetItem *juryItem = new QTableWidgetItem(jury);
+            juryItem->setFlags(juryItem->flags() & ~Qt::ItemIsEditable);
+
+            m_table->setItem(row, 0, heureItem);
+            m_table->setItem(row, 1, etuItem);
+            m_table->setItem(row, 2, juryItem);
 
             row++;
         }

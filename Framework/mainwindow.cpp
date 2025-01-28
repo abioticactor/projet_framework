@@ -28,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Définir les styles CSS
     setStyleSheet(
         "MainWindow { "
-        "  background-color: #eceae3; "  // Couleur de fond
-        "  border-radius: 15px; "       // Bordures arrondies
-        "  padding: 20px; "             // Espace autour des widgets
+        "  background-color: #eceae3; "
+        "  border-radius: 15px; "
+        "  padding: 20px; "
         "}"
         "QPushButton {"
         "  background-color: #fed0bc;"
@@ -39,6 +39,10 @@ MainWindow::MainWindow(QWidget *parent)
         "  border-radius: 5px;"
         "  padding: 10px 15px;"
         "  font-size: 14px;"
+        "}"
+        "QPushButton:disabled {"
+        "  background-color: #d3d3d3;" // Couleur grisée pour les boutons désactivés
+        "  color: #a9a9a9;"           // Texte grisé
         "}"
         "QPushButton:hover {"
         "  background-color: #fca691;"
@@ -52,15 +56,15 @@ MainWindow::MainWindow(QWidget *parent)
         "  padding: 5px;"
         "}"
         "QMessageBox {"
-        "  background-color: #eceae3;"  // Couleur de fond de la QMessageBox
-        "  color: black;"               // Couleur du texte
-        "  border: 1px solid #ccc;"     // Bordure légère
-        "  border-radius: 10px;"        // Bordure arrondie
-        "  padding: 10px;"              // Espacement interne
+        "  background-color: #eceae3;"
+        "  color: black;"
+        "  border: 1px solid #ccc;"
+        "  border-radius: 10px;"
+        "  padding: 10px;"
         "}"
         "QMessageBox QLabel {"
-        "  font-size: 14px;"            // Taille de la police dans QMessageBox
-        "  color: black;"               // Couleur du texte dans QMessageBox
+        "  font-size: 14px;"
+        "  color: black;"
         "}"
         );
 
