@@ -44,10 +44,10 @@ void TestJury::testVerifDispo() {
     auto thomas = std::make_shared<Enseignant>("SCHLINQUER", "Thomas");
     auto vincent = std::make_shared<Enseignant>("TRENCHANT", "Vincent");
     Jury jury(thomas, vincent);
-    auto c1 = std::make_shared<Creneau>("12/01/25", "10:00");
-    auto c2 = std::make_shared<Creneau>("13/01/25", "10:00");
-    auto c3 = std::make_shared<Creneau>("12/01/25", "13:00");
-    auto c4 = std::make_shared<Creneau>("14/01/25", "13:00");
+    auto c1 = std::make_shared<Creneau>("2025-01-12", "10:00");
+    auto c2 = std::make_shared<Creneau>("2025-01-13", "10:00");
+    auto c3 = std::make_shared<Creneau>("2025-01-12", "13:00");
+    auto c4 = std::make_shared<Creneau>("2025-01-14", "13:00");
 
     thomas->ajouterDisponibilite(c1);
     thomas->ajouterDisponibilite(c2);

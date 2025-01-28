@@ -13,9 +13,7 @@ public:
 private:
     // Tests individuels
     static void testConstructeur();
-    static void testGetSetEntreprise();
-    static void testGetSetTitre();
-    static void testGetSetTuteur();
+    static void testSetters();
 };
 
 #endif // STAGETEST_H

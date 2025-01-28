@@ -1,14 +1,12 @@
 #include "Tests/soutenancetest.h"
 
 void SoutenanceTest::runTests() {
-    std::cout << "Démarrage des tests pour la classe Soutenance...\n";
-
+    std::cout << "\nDEBUT des tests pour la Classe SOUTENANCE\n" << std::endl;
     testAjouterEtudiant();
     testAjouterJury();
     testVerifierDisponibilites();
     testAffecterJury();
-
-    std::cout << "Tous les tests pour la classe Soutenance ont réussi avec succès !\n";
+    std::cout << "\nFIN des tests pour la Classe SOUTENANCE\n" << std::endl;
 }
 
 void SoutenanceTest::testAjouterEtudiant() {
