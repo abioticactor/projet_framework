@@ -292,7 +292,7 @@ void CreneauxDialog::onValiderCreneau()
     }
 
     QMessageBox::information(this, "Créneau ajouté",
-                             QString("Créneau %1 %2 ajouté/associé !").arg(dateStr, heureStr));
+                             QString("<font color='black'>Créneau %1 %2 ajouté/associé !</font>").arg(dateStr, heureStr));
 }
 
 

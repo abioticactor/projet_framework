@@ -43,17 +43,22 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "QTableWidget::item { "
         "border: 1px solid #ccc; "
         "border-radius: 5px; "
+        "color: black; "
         "padding: 10px; "
         "}"
-        "QTableWidget QHeaderView::section { "
+        "QTableWidget::item:selected { "
         "background-color: #ffbea3; "
+        "}"
+        "QHeaderView::section { "
+        "background-color: #fff; " // Change ici pour correspondre à la couleur de fond
         "color: black; "
         "border: none; "
         "font-weight: bold; "
         "padding: 5px; "
         "}"
-        "QTableWidget::item:hover { "
-        "background-color: #FFF; "
+        "QTableWidget QTableCornerButton::section { "
+        "background-color: #fff; " // Ajoutez cette partie pour gérer le coin supérieur gauche
+        "border: none; "
         "}"
         );
 
