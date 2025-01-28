@@ -291,6 +291,8 @@ void CreneauxDialog::onValiderCreneau()
         }
     }
 
+    std::cout << "Nombre total de créneaux : " << creneaux.size() << "\n";
+
     QMessageBox::information(this, "Créneau ajouté",
                              QString("<font color='black'>Créneau %1 %2 ajouté/associé !</font>").arg(dateStr, heureStr));
 }
@@ -301,7 +303,6 @@ void CreneauxDialog::onOuvrirPlanning()
     // On appelle la méthode creerJurysEtAffecterEtudiants() du TestProjet
     // pour générer la planification
     m_testProjet.creerJurysEtAffecterEtudiants();
-
     // On ouvre la 3eme fenêtre
     PlanningDialog *dlg = new PlanningDialog(m_testProjet);
     dlg->show();

@@ -232,7 +232,6 @@ void PlanningDialog::remplirTable(const QString &dateStr)
 
 void PlanningDialog::onCloseAll()
 {
-    QApplication::quit();
     QMessageBox::StandardButton reply = QMessageBox::question(
         this,
         "Confirmation de fermeture",
@@ -244,6 +243,7 @@ void PlanningDialog::onCloseAll()
     }
     // Sinon, ne rien faire (rester dans la fenêtre)
 }
+
 
 void PlanningDialog::closeEvent(QCloseEvent *event)
 {

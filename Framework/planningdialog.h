@@ -27,6 +27,7 @@ class PlanningDialog : public QDialog
 public:
     explicit PlanningDialog(TestProjet &projet, QWidget *parent = nullptr);
     ~PlanningDialog();
+    void remplirTable(const QString &dateStr);
 
 private slots:
     void onDateChanged();
@@ -44,7 +45,6 @@ private:
     QPushButton     *m_btnFermer;
     QPushButton *m_btnExporter;
 
-    void remplirTable(const QString &dateStr);
     QString choisirOrdreExport();
 
 };

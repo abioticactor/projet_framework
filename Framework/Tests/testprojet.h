@@ -71,7 +71,6 @@ public:
     void sauvegarderDonnees(const QString &fichier) const;
     void restaurerDonnees(const QString &fichier);
 
-
 };
 
 #endif // TESTPROJET_H
