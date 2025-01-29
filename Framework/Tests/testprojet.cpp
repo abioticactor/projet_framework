@@ -178,7 +178,7 @@ void TestProjet::creerEtAssignerCreneaux()
     std::cout << "[TestProjet] Fin de l'affectation des jurys.\n";
 }*/
 
-void TestProjet::creerJurysEtAffecterEtudiants() {
+/*void TestProjet::creerJurysEtAffecterEtudiants() {
     std::cout << "\n[TestProjet] Creation de jurys (2 soutenances max par creneau)\n";
 
     // occupationEnseignants[creneau] : liste des enseignants déjà pris sur ce créneau
@@ -279,6 +279,142 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
         // On passe au creneau suivant
     }
     std::cout << "[TestProjet] Fin de l'affectation.\n";
+}*/
+
+// 3) Creation des jurys et affectation des etudiants
+void TestProjet::creerJurysEtAffecterEtudiants() {
+    std::cout << "\n[TestProjet] Début de l'affectation des jurys...\n";
+    std::cout << "[TestProjet] Nombre de créneaux disponibles : " << m_creneaux.size() << "\n";
+
+    // occupationEnseignants[creneau] : liste des enseignants déjà pris sur ce créneau
+    std::unordered_map<std::shared_ptr<Creneau>, std::unordered_set<std::shared_ptr<Enseignant>>> occupationEnseignants;
+
+    // Ensemble des étudiants déjà affectés (chacun n'a qu'une soutenance)
+    std::unordered_set<std::shared_ptr<Etudiant>> etudiantsAffectes;
+
+    for (auto& creneau : m_creneaux) {
+        std::cout << "  Parcourir le créneau : " << creneau->getDate() << " " << creneau->getHeure() << "\n";
+        int nbAffectations = 0; // combien d'étudiants ont été affectés sur ce creneau
+
+        // On va parcourir TOUS les étudiants
+        // et on affecte ceux qu’on peut, jusqu’à 2
+        for (auto& etu : m_etudiants) {
+            if(aDejaUneSoutenance(etu)){
+                std::cout << "    Etudiant à déjà une soutenance.\n";
+                continue;
+            }
+            // Stop si le creneau est déjà plein
+            if (nbAffectations >= 2) {
+                std::cout << "    Créneau plein, passage au suivant.\n";
+                break;
+            }
+
+            // Déjà affecté ? => skip
+            if (etudiantsAffectes.find(etu) != etudiantsAffectes.end()) {
+                continue;
+            }
+
+            auto stage = etu->getStage();
+            if (!stage) {
+                std::cout << "    Etudiant " << etu->getNom() << " n'a pas de stage.\n";
+                continue;
+            }
+
+            auto president = stage->getTuteur();
+            if (!president) {
+                std::cout << "    Stage de l'étudiant " << etu->getNom() << " n'a pas de tuteur.\n";
+                continue;
+            }
+
+            // Vérifier si l'étudiant est dispo sur creneau
+            auto calEtud = etu->getDisponibilitesEtudiant();
+            bool etuOK = std::any_of(calEtud.begin(), calEtud.end(),
+                                     [&](auto& c){ return (*c == *creneau); });
+            if (!etuOK) {
+                std::cout << "    Etudiant " << etu->getNom() << " non disponible sur ce créneau.\n";
+                continue;
+            }
+
+            // Vérifier si le président est dispo
+            auto calPres = president->getDisponibilites().getCalendrier();
+            bool presOK = std::any_of(calPres.begin(), calPres.end(),
+                                      [&](auto& c){ return (*c == *creneau); });
+            if (!presOK) {
+                std::cout << "    Président " << president->getNom() << " non disponible sur ce créneau.\n";
+                continue;
+            }
+
+            // Vérifier si le président n'est pas déjà dans occupationEnseignants[creneau]
+            auto& occEns = occupationEnseignants[creneau];
+            if (occEns.find(president) != occEns.end()) {
+                std::cout << "    Président " << president->getNom() << " déjà occupé sur ce créneau.\n";
+                continue; // Déjà occupé
+            }
+
+            // On cherche un co_jury
+            std::shared_ptr<Enseignant> co_jury = nullptr;
+            for (auto& e : m_enseignants) {
+                if (e == president) continue; // pas le même
+
+                // Vérifier e->dispo sur creneau
+                auto calE = e->getDisponibilites().getCalendrier();
+                bool eOk = std::any_of(calE.begin(), calE.end(),
+                                       [&](auto& cc){ return (*cc == *creneau); });
+                if (!eOk) {
+                    std::cout << "    Co-jury " << e->getNom() << " non disponible sur ce créneau.\n";
+                    continue;
+                }
+
+                // Vérifier e pas déjà occupé
+                if (occEns.find(e) != occEns.end()) {
+                    std::cout << "    Co-jury " << e->getNom() << " déjà occupé sur ce créneau.\n";
+                    continue;
+                }
+
+                // **Nouvelle vérification : Le jury doit être disponible**
+                if (!juryEstDisponible(president, e, creneau)) {
+                    continue;
+                }
+
+                co_jury = e;
+                std::cout << "    Co-jury trouvé : " << co_jury->getNom() << "\n";
+                break;
+            }
+            if (!co_jury) {
+                std::cout << "    Aucun co-jury disponible pour l'étudiant " << etu->getNom() << " sur ce créneau.\n";
+                continue; // pas trouvé de co-jury
+            }
+
+            // Vérifier triple compat via Soutenance
+            auto jury = std::make_shared<Jury>(president, co_jury);
+            if (!m_soutenance.verifierDisponibilites(*etu, *jury)) {
+                std::cout << "    Triple compatibilité échouée pour l'étudiant " << etu->getNom() << " avec le jury ("
+                          << president->getNom() << " & " << co_jury->getNom() << ").\n";
+                continue;
+            }
+
+            // => on affecte
+            jury->setCreneauAttribue(creneau);
+            // Marquer president / co_jury comme occupés
+            occEns.insert(president);
+            occEns.insert(co_jury);
+
+            // Ajouter la triple liaison
+            m_soutenance.assigner(etu, jury, creneau);
+
+            // Ajouter etu dans la set "déjà affecté"
+            etudiantsAffectes.insert(etu);
+
+            nbAffectations++;
+
+            std::cout << "[" << nbAffectations << " assign] Etu " << etu->getNom()
+                      << " => (" << president->getNom() << " & "
+                      << co_jury->getNom() << ") sur "
+                      << creneau->getDate() << " " << creneau->getHeure() << "\n";
+        }
+        // On passe au creneau suivant
+    }
+    std::cout << "[TestProjet] Fin de l'affectation.\n";
 }
 
 
@@ -345,7 +481,7 @@ void TestProjet::afficherToutesLesSoutenances() const
     std::cout << "=== Fin du recapitulatif ===\n";
 }
 
-void TestProjet::sauvegarderDonnees(const QString &fichier) const
+/*void TestProjet::sauvegarderDonnees(const QString &fichier) const
 {
     if (m_creneaux.empty()) {
         std::cerr << "Aucune sauvegarde à effectuer : aucun créneau enregistré.\n";
@@ -495,4 +631,237 @@ void TestProjet::restaurerDonnees(const QString &fichier)
             m_soutenance.assigner(*etu, jury, *creneau);
         }
     }
+}*/
+
+void TestProjet::sauvegarderDonnees(const QString &fichier) const
+{
+    if (m_creneaux.empty()) {
+        std::cerr << "Aucune sauvegarde à effectuer : aucun créneau enregistré.\n";
+        return;
+    }
+
+    QJsonObject sauvegarde;
+
+    // Sauvegarde des créneaux
+    QJsonArray creneauxArray;
+    for (const auto &creneau : m_creneaux) {
+        QJsonObject creneauObj;
+        creneauObj["date"] = QString::fromStdString(creneau->getDate());
+        creneauObj["heure"] = QString::fromStdString(creneau->getHeure());
+        creneauxArray.append(creneauObj);
+    }
+    sauvegarde["creneaux"] = creneauxArray;
+
+    // Sauvegarde des enseignants
+    QJsonArray enseignantsArray;
+    for (const auto &ens : m_enseignants) {
+        QJsonObject ensObj;
+        ensObj["nom"] = QString::fromStdString(ens->getNom());
+        enseignantsArray.append(ensObj);
+    }
+    sauvegarde["enseignants"] = enseignantsArray;
+
+    // Sauvegarde des stages
+    QJsonArray stagesArray;
+    for (const auto &stage : m_stages) {
+        QJsonObject stageObj;
+        stageObj["titre"] = QString::fromStdString(stage->getTitre());
+        stageObj["entreprise"] = QString::fromStdString(stage->getEntreprise());
+        stageObj["tuteur"] = QString::fromStdString(stage->getTuteur()->getNom());
+        stagesArray.append(stageObj);
+    }
+    sauvegarde["stages"] = stagesArray;
+
+    // Sauvegarde des étudiants avec leur stage
+    QJsonArray etudiantsArray;
+    for (const auto &etu : m_etudiants) {
+        QJsonObject etuObj;
+        etuObj["nom"] = QString::fromStdString(etu->getNom());
+        etuObj["prenom"] = QString::fromStdString(etu->getPrenom());
+        if (etu->getStage()) {
+            etuObj["stage"] = QString::fromStdString(etu->getStage()->getTitre());  // Lien vers le stage
+        } else {
+            etuObj["stage"] = "";
+        }
+        etudiantsArray.append(etuObj);
+    }
+    sauvegarde["etudiants"] = etudiantsArray;
+
+    // Sauvegarde des soutenances (affectations)
+    QJsonArray affectationsArray;
+    for (const auto &aff : m_soutenance.getAffectations()) {
+        QJsonObject affObj;
+        affObj["etudiant"] = QString::fromStdString(aff.etu->getNom());
+        affObj["jury_president"] = QString::fromStdString(aff.jury->getPresident()->getNom());
+        affObj["jury_cojury"] = QString::fromStdString(aff.jury->getCojury()->getNom());
+        affObj["creneau_date"] = QString::fromStdString(aff.creneau->getDate());
+        affObj["creneau_heure"] = QString::fromStdString(aff.creneau->getHeure());
+        affectationsArray.append(affObj);
+    }
+    sauvegarde["affectations"] = affectationsArray;
+
+    // Écrire dans un fichier
+    QFile file(fichier);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(sauvegarde).toJson());
+        file.close();
+        std::cout << "Sauvegarde effectuée dans " << fichier.toStdString() << "\n";
+    }
+}
+
+void TestProjet::restaurerDonnees(const QString &fichier)
+{
+    QFile file(fichier);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Impossible d'ouvrir le fichier de sauvegarde : " << fichier.toStdString() << "\n";
+        return;
+    }
+
+    QByteArray saveData = file.readAll();
+    file.close();
+
+    QJsonDocument document = QJsonDocument::fromJson(saveData);
+    QJsonObject sauvegarde = document.object();
+
+    // === Restaurer les créneaux sans écraser les anciens ===
+    QJsonArray creneauxArray = sauvegarde["creneaux"].toArray();
+    for (const auto &c : creneauxArray) {
+        QJsonObject creneauObj = c.toObject();
+        auto creneau = std::make_shared<Creneau>(creneauObj["date"].toString().toStdString(),
+                                                 creneauObj["heure"].toString().toStdString());
+
+        // Vérifier si ce créneau existe déjà
+        auto it = std::find_if(m_creneaux.begin(), m_creneaux.end(),
+                               [&](auto &existingCreneau) { return *existingCreneau == *creneau; });
+
+        if (it == m_creneaux.end()) {
+            m_creneaux.push_back(creneau); // Ajouter uniquement s'il n'existe pas déjà
+        }
+    }
+
+    // === Restaurer les enseignants sans doublon ===
+    QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
+    for (const auto &e : enseignantsArray) {
+        QJsonObject ensObj = e.toObject();
+        auto nom = ensObj["nom"].toString().toStdString();
+
+        auto it = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                               [&](auto &existingEns) { return existingEns->getNom() == nom; });
+
+        if (it == m_enseignants.end()) {
+            auto ens = std::make_shared<Enseignant>(nom, "", std::vector<std::string>());
+            m_enseignants.push_back(ens);
+        }
+    }
+
+    // === Restaurer les stages en préservant les liens ===
+    QJsonArray stagesArray = sauvegarde["stages"].toArray();
+    for (const auto &s : stagesArray) {
+        QJsonObject stageObj = s.toObject();
+        auto titre = stageObj["titre"].toString().toStdString();
+        auto entreprise = stageObj["entreprise"].toString().toStdString();
+        auto tuteurNom = stageObj["tuteur"].toString().toStdString();
+
+        auto tuteur = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                   [&](auto &e) { return e->getNom() == tuteurNom; });
+
+        if (tuteur != m_enseignants.end()) {
+            auto it = std::find_if(m_stages.begin(), m_stages.end(),
+                                   [&](auto &existingStage) { return existingStage->getTitre() == titre; });
+
+            if (it == m_stages.end()) {
+                auto stage = std::make_shared<Stage>(entreprise, titre, *tuteur);
+                m_stages.push_back(stage);
+            }
+        }
+    }
+
+    // === Restaurer les étudiants en préservant leurs stages ===
+    QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
+    for (const auto &e : etudiantsArray) {
+        QJsonObject etuObj = e.toObject();
+        auto nom = etuObj["nom"].toString().toStdString();
+        auto prenom = etuObj["prenom"].toString().toStdString();
+        auto stageTitre = etuObj["stage"].toString().toStdString();
+
+        auto it = std::find_if(m_etudiants.begin(), m_etudiants.end(),
+                               [&](auto &existingEtu) { return existingEtu->getNom() == nom; });
+
+        if (it == m_etudiants.end()) {
+            auto etu = std::make_shared<Etudiant>(nom, prenom, "", std::vector<std::string>());
+
+            auto stageAssocie = std::find_if(m_stages.begin(), m_stages.end(),
+                                             [&](auto &s) { return s->getTitre() == stageTitre; });
+
+            if (stageAssocie != m_stages.end()) {
+                etu->setStage(*stageAssocie);
+            }
+
+            m_etudiants.push_back(etu);
+        }
+    }
+
+    // === Restaurer les soutenances sans écraser les anciennes ===
+    QJsonArray affectationsArray = sauvegarde["affectations"].toArray();
+    for (const auto &aff : affectationsArray) {
+        QJsonObject affObj = aff.toObject();
+        auto etudiantNom = affObj["etudiant"].toString().toStdString();
+        auto juryPresidentNom = affObj["jury_president"].toString().toStdString();
+        auto juryCojuryNom = affObj["jury_cojury"].toString().toStdString();
+        auto creneauDate = affObj["creneau_date"].toString().toStdString();
+        auto creneauHeure = affObj["creneau_heure"].toString().toStdString();
+
+        auto etu = std::find_if(m_etudiants.begin(), m_etudiants.end(),
+                                [&](auto &e) { return e->getNom() == etudiantNom; });
+
+        auto president = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                      [&](auto &e) { return e->getNom() == juryPresidentNom; });
+
+        auto cojury = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                   [&](auto &e) { return e->getNom() == juryCojuryNom; });
+
+        auto creneau = std::find_if(m_creneaux.begin(), m_creneaux.end(),
+                                    [&](auto &c) { return c->getDate() == creneauDate &&
+                                                          c->getHeure() == creneauHeure; });
+
+        if (etu != m_etudiants.end() && president != m_enseignants.end() &&
+            cojury != m_enseignants.end() && creneau != m_creneaux.end()) {
+
+            // Vérifier si cette affectation existe déjà
+            const auto &affectationsExistantes = m_soutenance.getAffectations();
+            auto it = std::find_if(affectationsExistantes.begin(), affectationsExistantes.end(),
+                                   [&](const auto &existingAff) {
+                                       return existingAff.etu == *etu &&
+                                              existingAff.jury->getPresident() == *president &&
+                                              existingAff.jury->getCojury() == *cojury &&
+                                              existingAff.creneau == *creneau;
+                                   });
+
+            if (it == affectationsExistantes.end()) {
+                auto jury = std::make_shared<Jury>(*president, *cojury);
+                m_soutenance.assigner(*etu, jury, *creneau);
+            }
+        }
+    }
+}
+
+bool TestProjet::aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) const
+{
+    const auto& affectations = m_soutenance.getAffectations();
+    return std::any_of(affectations.begin(), affectations.end(),
+                       [&](const auto& aff) { return aff.etu == etudiant; });
+}
+
+bool TestProjet::juryEstDisponible(const std::shared_ptr<Enseignant>& president,
+                                   const std::shared_ptr<Enseignant>& cojury,
+                                   const std::shared_ptr<Creneau>& creneau)
+{
+    const auto& affectations = m_soutenance.getAffectations();
+
+    return std::none_of(affectations.begin(), affectations.end(),
+                        [&](const auto& aff) {
+                            return (*aff.creneau == *creneau) &&
+                                   (aff.jury->getPresident() == president || aff.jury->getCojury() == president ||
+                                    aff.jury->getPresident() == cojury || aff.jury->getCojury() == cojury);
+                        });
 }

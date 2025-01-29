@@ -70,6 +70,11 @@ public:
     }
     void sauvegarderDonnees(const QString &fichier) const;
     void restaurerDonnees(const QString &fichier);
+    bool aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) const;
+    bool juryEstDisponible(const std::shared_ptr<Enseignant>& president,
+                           const std::shared_ptr<Enseignant>& cojury,
+                           const std::shared_ptr<Creneau>& creneau) ;
+
 
 };
 
