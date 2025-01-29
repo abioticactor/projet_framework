@@ -293,6 +293,11 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
     std::unordered_set<std::shared_ptr<Etudiant>> etudiantsAffectes;
 
     for (auto& creneau : m_creneaux) {
+        if (nombreSoutenancesPourCreneau(creneau) >= 2) {
+            std::cout << "[INFO] Créneau " << creneau->getDate() << " " << creneau->getHeure()
+                      << " est déjà rempli avec 2 soutenances, ignoré.\n";
+            continue;
+        }
         std::cout << "  Parcourir le créneau : " << creneau->getDate() << " " << creneau->getHeure() << "\n";
         int nbAffectations = 0; // combien d'étudiants ont été affectés sur ce creneau
 
@@ -368,11 +373,6 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
                 // Vérifier e pas déjà occupé
                 if (occEns.find(e) != occEns.end()) {
                     std::cout << "    Co-jury " << e->getNom() << " déjà occupé sur ce créneau.\n";
-                    continue;
-                }
-
-                // **Nouvelle vérification : Le jury doit être disponible**
-                if (!juryEstDisponible(president, e, creneau)) {
                     continue;
                 }
 
@@ -852,16 +852,9 @@ bool TestProjet::aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) c
                        [&](const auto& aff) { return aff.etu == etudiant; });
 }
 
-bool TestProjet::juryEstDisponible(const std::shared_ptr<Enseignant>& president,
-                                   const std::shared_ptr<Enseignant>& cojury,
-                                   const std::shared_ptr<Creneau>& creneau)
+int TestProjet::nombreSoutenancesPourCreneau(const std::shared_ptr<Creneau>& creneau) const
 {
     const auto& affectations = m_soutenance.getAffectations();
-
-    return std::none_of(affectations.begin(), affectations.end(),
-                        [&](const auto& aff) {
-                            return (*aff.creneau == *creneau) &&
-                                   (aff.jury->getPresident() == president || aff.jury->getCojury() == president ||
-                                    aff.jury->getPresident() == cojury || aff.jury->getCojury() == cojury);
-                        });
+    return std::count_if(affectations.begin(), affectations.end(),
+                         [&](const auto& aff) { return aff.creneau == creneau; });
 }
