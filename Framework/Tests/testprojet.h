@@ -72,6 +72,9 @@ public:
 
     bool juryIndisponible(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Creneau>& creneau) const;
 
+    void supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau);
+
+
 };
 
 #endif // TESTPROJET_H

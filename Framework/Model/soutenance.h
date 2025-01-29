@@ -54,6 +54,8 @@ public:
     const std::vector<Affectation>& getAffectations() const;
 
     void clearAffectations(); // Efface toutes les affectations
+    std::vector<Affectation>& getAffectationsModifiable();
+
 
 
 };

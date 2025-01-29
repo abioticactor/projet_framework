@@ -35,6 +35,8 @@ private slots:
     void onDateChanged();
     void onCloseAll();
     void onExporterSoutenances();
+    void supprimerSoutenance();
+
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -46,6 +48,8 @@ private:
     QTableWidget    *m_table;
     QPushButton     *m_btnFermer;
     QPushButton *m_btnExporter;
+    QPushButton *m_btnSupprimerSoutenance;
+
 
     QString choisirOrdreExport();
 

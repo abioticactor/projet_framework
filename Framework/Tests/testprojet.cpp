@@ -61,13 +61,15 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
     std::unordered_set<std::shared_ptr<Etudiant>> etudiantsAffectes;
 
     for (auto& creneau : m_creneaux) {
+        int nbAffectations = nombreSoutenancesPourCreneau(creneau); // 🔥 Vérifier combien de soutenances existent déjà
+
         if (nombreSoutenancesPourCreneau(creneau) >= 2) {
             std::cout << "[INFO] Créneau " << creneau->getDate() << " " << creneau->getHeure()
                       << " est déjà rempli avec 2 soutenances, ignoré.\n";
             continue;
         }
         std::cout << "  Parcourir le créneau : " << creneau->getDate() << " " << creneau->getHeure() << "\n";
-        int nbAffectations = 0; // combien d'étudiants ont été affectés sur ce creneau
+        //int nbAffectations = 0; // combien d'étudiants ont été affectés sur ce creneau
 
         // On va parcourir TOUS les étudiants
         // et on affecte ceux qu’on peut, jusqu’à 2
@@ -529,3 +531,27 @@ std::vector<std::shared_ptr<Creneau>>& TestProjet::getCreneaux() {
 const std::vector<std::shared_ptr<Creneau>>& TestProjet::getCreneaux() const {
     return m_creneaux;
 }
+
+void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
+{
+    auto& affectations = m_soutenance.getAffectationsModifiable(); // Accès modifiable
+
+    qDebug() << "Recherche de l'affectation à supprimer pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
+             << " | Date:" << QString::fromStdString(creneau->getDate())
+             << " | Heure:" << QString::fromStdString(creneau->getHeure());
+
+    // Supprimer l'affectation correspondante
+    auto it = std::remove_if(affectations.begin(), affectations.end(),
+                             [&](const Soutenance::Affectation& aff) {
+                                 return aff.etu == etudiant && aff.creneau == creneau;
+                             });
+
+    if (it != affectations.end()) {
+        affectations.erase(it, affectations.end());
+        qDebug() << "✅ Soutenance supprimée pour l'étudiant:" << QString::fromStdString(etudiant->getNom());
+    } else {
+        qDebug() << "⚠️ Aucune affectation trouvée pour cet étudiant à cette date/heure.";
+    }
+}
+
+

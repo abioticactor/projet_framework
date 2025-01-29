@@ -149,16 +149,33 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "}"
         );
 
+    m_btnSupprimerSoutenance = new QPushButton("Supprimer Soutenance", this);
+    m_btnSupprimerSoutenance->setFixedSize(160, 30);
+    m_btnSupprimerSoutenance->setStyleSheet(
+        "QPushButton { "
+        "background-color: #68c6fe; "
+        "border-radius: 15px; "
+        "color: white; "
+        "font-weight: bold; "
+        "border: none; "
+        "}"
+        "QPushButton:hover { background-color: #007acc; }"
+        );
+
 
     QVBoxLayout *vlay = new QVBoxLayout(this);
     vlay->addWidget(m_calendar);
     vlay->addWidget(m_table);
     vlay->addWidget(m_btnExporter); // Ajouter le bouton Exporter
     vlay->addWidget(m_btnFermer);
+    vlay->addWidget(m_btnSupprimerSoutenance);
+
 
     // Ajouter les boutons "Exporter" et "Fermer" côte à côte
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addStretch();
+    buttonLayout->addWidget(m_btnSupprimerSoutenance);
+    buttonLayout->addSpacing(10);
     buttonLayout->addWidget(m_btnExporter); // Bouton "Exporter"
     buttonLayout->addSpacing(10);          // Espace entre les deux boutons
     buttonLayout->addWidget(m_btnFermer);  // Bouton "Fermer"
@@ -174,6 +191,7 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
     connect(m_btnExporter, &QPushButton::clicked,
             this, &PlanningDialog::onExporterSoutenances); // Connexion du bouton Exporter
 
+    connect(m_btnSupprimerSoutenance, &QPushButton::clicked, this, &PlanningDialog::supprimerSoutenance);
 
     // Remplir pour la date du jour
     onDateChanged();
@@ -391,4 +409,57 @@ QString PlanningDialog::choisirOrdreExport()
     }
 
     return ""; // Retourne une chaîne vide si l'utilisateur annule
+}
+
+void PlanningDialog::supprimerSoutenance()
+{
+    int selectedRow = m_table->currentRow();
+    if (selectedRow < 0) {
+        QMessageBox::warning(this, "Aucune sélection", "Veuillez sélectionner une soutenance à supprimer.");
+        return;
+    }
+
+    // ✅ Correction : Récupérer correctement la date et l'heure séparément
+    QString creneauDate = m_calendar->selectedDate().toString("yyyy-MM-dd"); // Récupérer la date sélectionnée
+    QString creneauHeure = m_table->item(selectedRow, 0)->text(); // L'heure est dans la première colonne
+    QString etudiantNom = m_table->item(selectedRow, 1)->text().split(" ")[0]; // Prend uniquement le nom
+
+    qDebug() << "Tentative de suppression - Étudiant:" << etudiantNom
+             << " | Date:" << creneauDate << " | Heure:" << creneauHeure;
+
+    // Trouver l'étudiant correspondant
+    auto itEtu = std::find_if(m_testProjet.getEtudiants().begin(), m_testProjet.getEtudiants().end(),
+                              [&](const std::shared_ptr<Etudiant>& e) {
+                                  return QString::fromStdString(e->getNom()) == etudiantNom;
+                              });
+
+    // Trouver le créneau correspondant
+    auto itCreneau = std::find_if(m_testProjet.getCreneaux().begin(), m_testProjet.getCreneaux().end(),
+                                  [&](const std::shared_ptr<Creneau>& c) {
+                                      return QString::fromStdString(c->getDate()) == creneauDate &&
+                                             QString::fromStdString(c->getHeure()) == creneauHeure;
+                                  });
+
+    // Vérification des résultats
+    if (itEtu == m_testProjet.getEtudiants().end()) {
+        qDebug() << "❌ Erreur : Étudiant introuvable.";
+        QMessageBox::warning(this, "Erreur", "Impossible de trouver l'étudiant sélectionné.");
+        return;
+    }
+
+    if (itCreneau == m_testProjet.getCreneaux().end()) {
+        qDebug() << "❌ Erreur : Créneau introuvable. Vérifiez si la date et l'heure sont bien renseignées.";
+        QMessageBox::warning(this, "Erreur", "Impossible de trouver le créneau sélectionné.");
+        return;
+    }
+
+    // ✅ Suppression de la soutenance
+    m_testProjet.supprimerAffectation(*itEtu, *itCreneau);
+    qDebug() << "✅ Soutenance supprimée pour:" << etudiantNom;
+
+    // ✅ Mise à jour de l'affichage après suppression
+    m_table->removeRow(selectedRow);
+    m_testProjet.sauvegarderDonnees("sauvegarde.json");
+
+    QMessageBox::information(this, "Suppression réussie", "La soutenance a été supprimée.");
 }

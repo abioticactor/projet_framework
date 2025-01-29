@@ -112,3 +112,7 @@ void Soutenance::clearAffectations()
     jurys.clear();          // Réinitialise la liste des jurys
 }
 
+std::vector<Soutenance::Affectation>& Soutenance::getAffectationsModifiable()
+{
+    return m_affectations;
+}
