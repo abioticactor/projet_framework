@@ -331,6 +331,13 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
                 continue;
             }
 
+            // **Vérifier si le président est indisponible à cause d'une soutenance récente**
+            if (juryIndisponible(president, creneau)) {
+                std::cout << "[INFO] Président " << president->getNom() << " est indisponible sur ce créneau.\n";
+                continue;
+            }
+
+
             // Vérifier si l'étudiant est dispo sur creneau
             auto calEtud = etu->getDisponibilitesEtudiant();
             bool etuOK = std::any_of(calEtud.begin(), calEtud.end(),
@@ -360,6 +367,11 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
             std::shared_ptr<Enseignant> co_jury = nullptr;
             for (auto& e : m_enseignants) {
                 if (e == president) continue; // pas le même
+
+                // **Vérifier si le co-jury est indisponible à cause d'une soutenance récente**
+                if (juryIndisponible(e, creneau)) {
+                    continue;
+                }
 
                 // Vérifier e->dispo sur creneau
                 auto calE = e->getDisponibilites().getCalendrier();
@@ -857,4 +869,25 @@ int TestProjet::nombreSoutenancesPourCreneau(const std::shared_ptr<Creneau>& cre
     const auto& affectations = m_soutenance.getAffectations();
     return std::count_if(affectations.begin(), affectations.end(),
                          [&](const auto& aff) { return aff.creneau == creneau; });
+}
+
+bool TestProjet::juryIndisponible(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Creneau>& creneau) const
+{
+    const auto& affectations = m_soutenance.getAffectations();
+
+    for (const auto& aff : affectations) {
+        // Vérifie si l'enseignant est impliqué dans cette soutenance (président ou co-jury)
+        if (aff.jury->getPresident() == enseignant || aff.jury->getCojury() == enseignant) {
+            // Récupérer l'heure de la soutenance actuelle et l'heure du créneau à vérifier
+            int heureExistante = std::stoi(aff.creneau->getHeure().substr(0, 2));
+            int heureNouvelle = std::stoi(creneau->getHeure().substr(0, 2));
+
+            // Vérifier s'il y a moins d'une heure entre les deux soutenances
+            if (std::abs(heureNouvelle - heureExistante) < 1) {
+                return true; // Jury indisponible
+            }
+        }
+    }
+
+    return false; // Jury disponible
 }

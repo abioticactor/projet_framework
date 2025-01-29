@@ -72,7 +72,7 @@ public:
     void restaurerDonnees(const QString &fichier);
     bool aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) const;
     int nombreSoutenancesPourCreneau(const std::shared_ptr<Creneau>& creneau) const;
-
+    bool juryIndisponible(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Creneau>& creneau) const;
 
 };
 
