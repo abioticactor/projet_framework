@@ -300,17 +300,27 @@ void TestProjet::sauvegarderDonnees(const QString &fichier) const
     }
     sauvegarde["stages"] = stagesArray;
 
-    // Sauvegarde des étudiants avec leur stage
+    // Sauvegarde des étudiants avec leur stage et option
     QJsonArray etudiantsArray;
     for (const auto &etu : m_etudiants) {
         QJsonObject etuObj;
         etuObj["nom"] = QString::fromStdString(etu->getNom());
         etuObj["prenom"] = QString::fromStdString(etu->getPrenom());
+
+        if (!etu->getOptions().empty()) {
+            etuObj["option"] = QString::fromStdString(etu->getOptions().front()); // Stocke la première option
+        } else {
+            etuObj["option"] = "Non spécifié";
+        }
+
         if (etu->getStage()) {
-            etuObj["stage"] = QString::fromStdString(etu->getStage()->getTitre());  // Lien vers le stage
+            etuObj["stage"] = QString::fromStdString(etu->getStage()->getTitre());
+            etuObj["entreprise"] = QString::fromStdString(etu->getStage()->getEntreprise());
         } else {
             etuObj["stage"] = "";
+            etuObj["entreprise"] = "";
         }
+
         etudiantsArray.append(etuObj);
     }
     sauvegarde["etudiants"] = etudiantsArray;
@@ -328,7 +338,7 @@ void TestProjet::sauvegarderDonnees(const QString &fichier) const
     }
     sauvegarde["affectations"] = affectationsArray;
 
-    // Écrire dans un fichier
+    // Écriture dans un fichier JSON
     QFile file(fichier);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(QJsonDocument(sauvegarde).toJson());
@@ -351,38 +361,33 @@ void TestProjet::restaurerDonnees(const QString &fichier)
     QJsonDocument document = QJsonDocument::fromJson(saveData);
     QJsonObject sauvegarde = document.object();
 
-    // === Restaurer les créneaux sans écraser les anciens ===
+    // === Restaurer les créneaux ===
     QJsonArray creneauxArray = sauvegarde["creneaux"].toArray();
     for (const auto &c : creneauxArray) {
         QJsonObject creneauObj = c.toObject();
         auto creneau = std::make_shared<Creneau>(creneauObj["date"].toString().toStdString(),
                                                  creneauObj["heure"].toString().toStdString());
 
-        // Vérifier si ce créneau existe déjà
-        auto it = std::find_if(m_creneaux.begin(), m_creneaux.end(),
-                               [&](auto &existingCreneau) { return *existingCreneau == *creneau; });
-
-        if (it == m_creneaux.end()) {
-            m_creneaux.push_back(creneau); // Ajouter uniquement s'il n'existe pas déjà
+        if (std::find_if(m_creneaux.begin(), m_creneaux.end(),
+                         [&](auto &existingCreneau) { return *existingCreneau == *creneau; }) == m_creneaux.end()) {
+            m_creneaux.push_back(creneau);
         }
     }
 
-    // === Restaurer les enseignants sans doublon ===
+    // === Restaurer les enseignants ===
     QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
     for (const auto &e : enseignantsArray) {
         QJsonObject ensObj = e.toObject();
         auto nom = ensObj["nom"].toString().toStdString();
 
-        auto it = std::find_if(m_enseignants.begin(), m_enseignants.end(),
-                               [&](auto &existingEns) { return existingEns->getNom() == nom; });
-
-        if (it == m_enseignants.end()) {
+        if (std::none_of(m_enseignants.begin(), m_enseignants.end(),
+                         [&](auto &existingEns) { return existingEns->getNom() == nom; })) {
             auto ens = std::make_shared<Enseignant>(nom, "", std::vector<std::string>());
             m_enseignants.push_back(ens);
         }
     }
 
-    // === Restaurer les stages en préservant les liens ===
+    // === Restaurer les stages ===
     QJsonArray stagesArray = sauvegarde["stages"].toArray();
     for (const auto &s : stagesArray) {
         QJsonObject stageObj = s.toObject();
@@ -394,29 +399,27 @@ void TestProjet::restaurerDonnees(const QString &fichier)
                                    [&](auto &e) { return e->getNom() == tuteurNom; });
 
         if (tuteur != m_enseignants.end()) {
-            auto it = std::find_if(m_stages.begin(), m_stages.end(),
-                                   [&](auto &existingStage) { return existingStage->getTitre() == titre; });
-
-            if (it == m_stages.end()) {
+            if (std::none_of(m_stages.begin(), m_stages.end(),
+                             [&](auto &existingStage) { return existingStage->getTitre() == titre; })) {
                 auto stage = std::make_shared<Stage>(entreprise, titre, *tuteur);
                 m_stages.push_back(stage);
             }
         }
     }
 
-    // === Restaurer les étudiants en préservant leurs stages ===
+    // === Restaurer les étudiants ===
     QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
     for (const auto &e : etudiantsArray) {
         QJsonObject etuObj = e.toObject();
         auto nom = etuObj["nom"].toString().toStdString();
         auto prenom = etuObj["prenom"].toString().toStdString();
+        auto option = etuObj["option"].toString().toStdString();
         auto stageTitre = etuObj["stage"].toString().toStdString();
+        auto entreprise = etuObj["entreprise"].toString().toStdString();
 
-        auto it = std::find_if(m_etudiants.begin(), m_etudiants.end(),
-                               [&](auto &existingEtu) { return existingEtu->getNom() == nom; });
-
-        if (it == m_etudiants.end()) {
-            auto etu = std::make_shared<Etudiant>(nom, prenom, "", std::vector<std::string>());
+        if (std::none_of(m_etudiants.begin(), m_etudiants.end(),
+                         [&](auto &existingEtu) { return existingEtu->getNom() == nom; })) {
+            auto etu = std::make_shared<Etudiant>(nom, prenom, "", std::vector<std::string>{option});
 
             auto stageAssocie = std::find_if(m_stages.begin(), m_stages.end(),
                                              [&](auto &s) { return s->getTitre() == stageTitre; });
@@ -429,7 +432,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
         }
     }
 
-    // === Restaurer les soutenances sans écraser les anciennes ===
+    // === Restaurer les affectations des soutenances ===
     QJsonArray affectationsArray = sauvegarde["affectations"].toArray();
     for (const auto &aff : affectationsArray) {
         QJsonObject affObj = aff.toObject();
@@ -472,6 +475,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
         }
     }
 }
+
 
 bool TestProjet::aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) const
 {

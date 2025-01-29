@@ -5,7 +5,7 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
     : QDialog(parent),
     m_testProjet(projet)
 {
-    setWindowTitle("Fenêtre 3 : Planning");
+    setWindowTitle("Planning");
     setWindowFlags(Qt::FramelessWindowHint); // Supprime la barre de titre
 
     // Ajouter une couleur de fond autour du calendrier et de la table
@@ -31,12 +31,17 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
 
     m_calendar = new QCalendarWidget(this);
     m_table = new QTableWidget(this);
-    m_table->setColumnCount(3);
+
+    m_table->setColumnCount(6);
     QStringList headers;
     headers << "Heure"
             << "Etudiant"
+            << "Option"
+            << "Stage"
+            << "Entreprise"
             << "Jury";
     m_table->setHorizontalHeaderLabels(headers);
+
     m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     // Ajout du style personnalisé pour la table (déjà présent dans votre code)
@@ -199,12 +204,28 @@ void PlanningDialog::remplirTable(const QString &dateStr)
     {
         QString cDate = QString::fromStdString(aff.creneau->getDate());
         if (cDate == dateStr)
-        { // Comparez correctement les dates
+        {
             m_table->insertRow(row);
 
             QString heure = QString::fromStdString(aff.creneau->getHeure());
             QString etu = QString::fromStdString(aff.etu->getNom()) + " " + QString::fromStdString(aff.etu->getPrenom());
-            QString jury = QString::fromStdString(aff.jury->getPresident()->getNom()) + " & " + QString::fromStdString(aff.jury->getCojury()->getNom());
+
+            // Récupérer option, stage et entreprise
+            QString option = "Non spécifié";
+            QString stageTitre = "Non spécifié";
+            QString entreprise = "Non spécifié";
+
+            if (auto stage = aff.etu->getStage()) {
+                stageTitre = QString::fromStdString(stage->getTitre());
+                entreprise = QString::fromStdString(stage->getEntreprise());
+            }
+
+            if (!aff.etu->getOptions().empty()) {
+                option = QString::fromStdString(aff.etu->getOptions().front());
+            }
+
+            QString jury = QString::fromStdString(aff.jury->getPresident()->getNom()) + " & " +
+                           QString::fromStdString(aff.jury->getCojury()->getNom());
 
             // Création des items avec drapeaux non éditables
             QTableWidgetItem *heureItem = new QTableWidgetItem(heure);
@@ -213,12 +234,25 @@ void PlanningDialog::remplirTable(const QString &dateStr)
             QTableWidgetItem *etuItem = new QTableWidgetItem(etu);
             etuItem->setFlags(etuItem->flags() & ~Qt::ItemIsEditable);
 
+            QTableWidgetItem *optionItem = new QTableWidgetItem(option);
+            optionItem->setFlags(optionItem->flags() & ~Qt::ItemIsEditable);
+
+            QTableWidgetItem *stageItem = new QTableWidgetItem(stageTitre);
+            stageItem->setFlags(stageItem->flags() & ~Qt::ItemIsEditable);
+
+            QTableWidgetItem *entrepriseItem = new QTableWidgetItem(entreprise);
+            entrepriseItem->setFlags(entrepriseItem->flags() & ~Qt::ItemIsEditable);
+
             QTableWidgetItem *juryItem = new QTableWidgetItem(jury);
             juryItem->setFlags(juryItem->flags() & ~Qt::ItemIsEditable);
 
+            // Ajout des valeurs à la table
             m_table->setItem(row, 0, heureItem);
             m_table->setItem(row, 1, etuItem);
-            m_table->setItem(row, 2, juryItem);
+            m_table->setItem(row, 2, optionItem);
+            m_table->setItem(row, 3, stageItem);
+            m_table->setItem(row, 4, entrepriseItem);
+            m_table->setItem(row, 5, juryItem);
 
             row++;
         }
@@ -276,7 +310,9 @@ void PlanningDialog::onExporterSoutenances()
     QTextStream stream(&file);
 
     // En-têtes du fichier CSV
-    stream << "Date,Heure,Etudiant,Jury President,Jury Co-jury\n";
+    //stream << "Date,Heure,Etudiant,Jury President,Jury Co-jury\n";
+    stream << "Date,Heure,Etudiant,Option,Stage,Entreprise,Jury President,Jury Co-jury\n";
+
 
     // Récupérer les affectations et les trier selon le choix
     auto affectations = m_testProjet.getSoutenance().getAffectations();
@@ -295,16 +331,39 @@ void PlanningDialog::onExporterSoutenances()
             return (a.creneau->getDate() > b.creneau->getDate()) ||
                    (a.creneau->getDate() == b.creneau->getDate() && a.creneau->getHeure() > b.creneau->getHeure());
         });
+    }else if (ordre == "Par Option"){
+        std::sort(affectations.begin(), affectations.end(), [](const auto &a, const auto &b) {
+            std::string optionA = a.etu->getOptions().empty() ? "Non spécifié" : a.etu->getOptions().front();
+            std::string optionB = b.etu->getOptions().empty() ? "Non spécifié" : b.etu->getOptions().front();
+            return optionA < optionB;
+        });
     }
 
     // Exporter les données triées
     for (const auto &aff : affectations) {
+        QString option = "Non spécifié";
+        QString stageTitre = "Non spécifié";
+        QString entreprise = "Non spécifié";
+
+        if (auto stage = aff.etu->getStage()) {
+            stageTitre = QString::fromStdString(stage->getTitre());
+            entreprise = QString::fromStdString(stage->getEntreprise());
+        }
+
+        if (!aff.etu->getOptions().empty()) {
+            option = QString::fromStdString(aff.etu->getOptions().front());
+        }
+
         stream << QString::fromStdString(aff.creneau->getDate()) << ","
                << QString::fromStdString(aff.creneau->getHeure()) << ","
                << QString::fromStdString(aff.etu->getNom()) << " " << QString::fromStdString(aff.etu->getPrenom()) << ","
+               << option << ","
+               << stageTitre << ","
+               << entreprise << ","
                << QString::fromStdString(aff.jury->getPresident()->getNom()) << ","
                << QString::fromStdString(aff.jury->getCojury()->getNom()) << "\n";
     }
+
 
     file.close();
 
@@ -314,7 +373,7 @@ void PlanningDialog::onExporterSoutenances()
 
 QString PlanningDialog::choisirOrdreExport()
 {
-    QStringList options = {"Date croissante", "Ordre alphabétique (Étudiants)", "Date décroissante"};
+    QStringList options = {"Date croissante", "Ordre alphabétique (Étudiants)", "Date décroissante", "Par Option"};
     bool ok;
 
     QString choix = QInputDialog::getItem(
