@@ -1,9 +1,4 @@
-#include "PlanningDialog.h"
-#include <QItemDelegate>
-#include <QApplication>
-#include <QStyleOption>
-#include <QPainter>
-#include "creneauxdialog.h"
+#include "planningdialog.h"
 
 
 PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)

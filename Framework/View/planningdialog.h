@@ -17,9 +17,11 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QInputDialog>
+#include <QStyleOption>
+#include <QPainter>
 
-
-#include "Tests/TestProjet.h"
+#include "creneauxdialog.h"
+#include "Tests/testprojet.h"
 
 class PlanningDialog : public QDialog
 {

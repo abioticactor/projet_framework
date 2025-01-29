@@ -3,7 +3,6 @@
 
 #include "Model/etudiant.h"
 #include "Model/stage.h"
-/*#include "Model/enseignantstage.h"*/
 #include "Model/enseignant.h"
 
 #include <string>

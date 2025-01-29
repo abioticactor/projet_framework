@@ -81,19 +81,6 @@ bool Soutenance::affecterJury(Etudiant& etudiant, const std::vector<std::shared_
 }
 
 
-
-// Organiser les données dans une matrice d'association
-/*void Soutenance::organiserDonnees(std::shared_ptr<MatriceAssociation> matrice) {
-    for (const auto& etudiant : etudiants) {
-        for (const auto& jury : jurys) {
-            if (verifierDisponibilites(*etudiant, *jury)) {
-                matrice->associer(std::make_shared<Soutenance>(*this), jury->getPresident().getNom(), jury->getCojury().getNom());
-            }
-        }
-    }
-}*/
-
-
 // Exemple d'implémentation
 void Soutenance::assigner(const std::shared_ptr<Etudiant>& etu,
                           const std::shared_ptr<Jury>&     jury,

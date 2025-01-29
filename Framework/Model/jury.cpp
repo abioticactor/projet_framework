@@ -36,7 +36,7 @@ bool Jury::verifDispo() {
     return etat;
 }
 
-// NOUVEAU : Setter/Getter pour le créneau
+// Setter/Getter pour le créneau
 void Jury::setCreneauAttribue(std::shared_ptr<Creneau> c) {
     m_creneauAttribue = c;
 }

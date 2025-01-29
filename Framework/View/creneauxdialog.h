@@ -12,11 +12,12 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QFile>
+#include <QCalendarWidget>
 
 
 
-#include "Tests/TestProjet.h"
-#include "PlanningDialog.h"
+#include "Tests/testprojet.h"
+#include "planningdialog.h"
 
 class CreneauxDialog : public QDialog
 {

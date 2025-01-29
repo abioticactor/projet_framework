@@ -21,7 +21,7 @@ public:
         std::shared_ptr<Creneau>  creneau;
     };
 
-    // NOUVEAU : liste de toutes les affectations
+    //Liste de toutes les affectations
     std::vector<Affectation> m_affectations;
 
 public:
@@ -45,12 +45,12 @@ public:
     // Organisation des données avec MatriceAssociation
     //void organiserDonnees(std::shared_ptr<MatriceAssociation> matrice);
 
-    // NOUVEAU : méthode pour assigner d'un coup
+    // méthode pour assigner d'un coup
     void assigner(const std::shared_ptr<Etudiant>& etu,
                   const std::shared_ptr<Jury>& jury,
                   const std::shared_ptr<Creneau>& creneau);
 
-    // NOUVEAU : accès à la liste des affectations
+    // accès à la liste des affectations
     const std::vector<Affectation>& getAffectations() const;
 
     void clearAffectations(); // Efface toutes les affectations

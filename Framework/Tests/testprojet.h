@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "Controller/CSVHandler.h"
+#include "Controller/csvhandler.h"
 #include "Model/etudiant.h"
 #include "Model/enseignant.h"
 #include "Model/stage.h"
@@ -51,27 +51,25 @@ public:
     // 4. Affichage final de toutes les soutenances
     void afficherToutesLesSoutenances() const;
 
-    const Soutenance& getSoutenance() const { return m_soutenance; }
+    const Soutenance& getSoutenance() const ;
 
-    const std::vector<std::shared_ptr<Etudiant>>& getEtudiants() const {
-        return m_etudiants;
-    }
+    const std::vector<std::shared_ptr<Etudiant>>& getEtudiants() const ;
 
     // Accès en lecture seule (const) à la liste d’enseignants
-    const std::vector<std::shared_ptr<Enseignant>>& getEnseignants() const {
-        return m_enseignants;
-    }
+    const std::vector<std::shared_ptr<Enseignant>>& getEnseignants() const;
 
-    std::vector<std::shared_ptr<Creneau>>& getCreneaux() {
-        return m_creneaux;
-    }
-    const std::vector<std::shared_ptr<Creneau>>& getCreneaux() const {
-        return m_creneaux;
-    }
+    std::vector<std::shared_ptr<Creneau>>& getCreneaux();
+
+    const std::vector<std::shared_ptr<Creneau>>& getCreneaux() const;
+
     void sauvegarderDonnees(const QString &fichier) const;
+
     void restaurerDonnees(const QString &fichier);
+
     bool aDejaUneSoutenance(const std::shared_ptr<Etudiant>& etudiant) const;
+
     int nombreSoutenancesPourCreneau(const std::shared_ptr<Creneau>& creneau) const;
+
     bool juryIndisponible(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Creneau>& creneau) const;
 
 };

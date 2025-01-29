@@ -9,20 +9,16 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Controller/csv.cpp \
     Controller/csvhandler.cpp \
-    Controller/matrice.cpp \
     Model/calendrier.cpp \
     Model/creneau.cpp \
     Model/enseignant.cpp \
-    Model/enseignantstage.cpp \
     Model/etudiant.cpp \
     Model/jury.cpp \
     Model/personne.cpp \
     Model/soutenance.cpp \
     Model/stage.cpp \
     Tests/csvtest.cpp \
-    Tests/enseignantstagetest.cpp \
     Tests/enseignanttest.cpp \
     Tests/etudianttest.cpp \
     Tests/personnetest.cpp \
@@ -30,29 +26,24 @@ SOURCES += \
     Tests/stagetest.cpp \
     Tests/testcalendrier.cpp \
     Tests/testcreneau.cpp \
-    Tests/testcsv.cpp \
     Tests/testjury.cpp \
     Tests/testprojet.cpp \
-    creneauxdialog.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    planningdialog.cpp
+    View/creneauxdialog.cpp \
+    View/mainwindow.cpp \
+    View/planningdialog.cpp \
+    main.cpp
 
 HEADERS += \
-    Controller/csv.h \
     Controller/csvhandler.h \
-    Controller/matrice.h \
     Model/calendrier.h \
     Model/creneau.h \
     Model/enseignant.h \
-    Model/enseignantstage.h \
     Model/etudiant.h \
     Model/jury.h \
     Model/personne.h \
     Model/soutenance.h \
     Model/stage.h \
     Tests/csvtest.h \
-    Tests/enseignantstagetest.h \
     Tests/enseignanttest.h \
     Tests/etudianttest.h \
     Tests/personnetest.h \
@@ -60,17 +51,14 @@ HEADERS += \
     Tests/stagetest.h \
     Tests/testcalendrier.h \
     Tests/testcreneau.h \
-    Tests/testcsv.h \
     Tests/testjury.h \
     Tests/testprojet.h \
-    creneauxdialog.h \
-    mainwindow.h \
-    planningdialog.h
+    View/creneauxdialog.h \
+    View/mainwindow.h \
+    View/planningdialog.h
 
 FORMS += \
-    PlanningDialog.ui \
-    creneauxdialog.ui \
-    mainwindow.ui
+    PlanningDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -21,7 +21,7 @@ public:
     void setPresident(std::shared_ptr<Enseignant> president);
     void setCojury(std::shared_ptr<Enseignant> cojury);
     bool verifDispo();
-    // NOUVEAU : Setter/Getter pour le créneau
+    //Setter/Getter pour le créneau
     void setCreneauAttribue(std::shared_ptr<Creneau> c);
     std::shared_ptr<Creneau> getCreneauAttribue() const;
 

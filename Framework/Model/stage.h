@@ -16,7 +16,6 @@ private:
 
 public:
     // Constructeur
-    /*Stage(const std::string& entreprise, const std::string& titre, const std::shared_ptr<Personne>& tuteur);*/
     Stage(const std::string& entreprise, const std::string& titre, const std::shared_ptr<Enseignant>& tuteur);
 
     // Gestion de l'entreprise
