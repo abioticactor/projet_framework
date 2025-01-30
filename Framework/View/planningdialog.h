@@ -36,6 +36,8 @@ private slots:
     void onCloseAll();
     void onExporterSoutenances();
     void supprimerSoutenance();
+    void onRetour();
+
 
 
 protected:
@@ -49,7 +51,7 @@ private:
     QPushButton     *m_btnFermer;
     QPushButton *m_btnExporter;
     QPushButton *m_btnSupprimerSoutenance;
-
+    QPushButton *m_btnRetour;
 
     QString choisirOrdreExport();
 

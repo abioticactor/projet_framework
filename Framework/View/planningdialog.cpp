@@ -162,6 +162,18 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
         "QPushButton:hover { background-color: #007acc; }"
         );
 
+    m_btnRetour = new QPushButton("Retour", this);
+    m_btnRetour->setFixedSize(90, 30);
+    m_btnRetour->setStyleSheet(
+        "QPushButton { "
+        "background-color: #ffcc00; " // Jaune pour différencier
+        "border-radius: 15px; "
+        "color: white; "
+        "font-weight: bold; "
+        "border: none; "
+        "}"
+        "QPushButton:hover { background-color: #ffaa00; }"
+        );
 
     QVBoxLayout *vlay = new QVBoxLayout(this);
     vlay->addWidget(m_calendar);
@@ -169,11 +181,14 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
     vlay->addWidget(m_btnExporter); // Ajouter le bouton Exporter
     vlay->addWidget(m_btnFermer);
     vlay->addWidget(m_btnSupprimerSoutenance);
+    vlay->addWidget(m_btnRetour);
 
 
     // Ajouter les boutons "Exporter" et "Fermer" côte à côte
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addStretch();
+    buttonLayout->addWidget(m_btnRetour);
+    buttonLayout->addSpacing(10);
     buttonLayout->addWidget(m_btnSupprimerSoutenance);
     buttonLayout->addSpacing(10);
     buttonLayout->addWidget(m_btnExporter); // Bouton "Exporter"
@@ -192,6 +207,9 @@ PlanningDialog::PlanningDialog(TestProjet &projet, QWidget *parent)
             this, &PlanningDialog::onExporterSoutenances); // Connexion du bouton Exporter
 
     connect(m_btnSupprimerSoutenance, &QPushButton::clicked, this, &PlanningDialog::supprimerSoutenance);
+
+    connect(m_btnRetour, &QPushButton::clicked, this, &PlanningDialog::onRetour);
+
 
     // Remplir pour la date du jour
     onDateChanged();
@@ -462,4 +480,13 @@ void PlanningDialog::supprimerSoutenance()
     m_testProjet.sauvegarderDonnees("sauvegarde.json");
 
     QMessageBox::information(this, "Suppression réussie", "La soutenance a été supprimée.");
+}
+
+void PlanningDialog::onRetour() {
+    // Fermer la fenêtre actuelle (Planning)
+    this->close();
+
+    // Rouvrir la fenêtre des créneaux
+    CreneauxDialog *creneauxDialog = new CreneauxDialog(m_testProjet);
+    creneauxDialog->exec();
 }
