@@ -287,6 +287,16 @@ void TestProjet::sauvegarderDonnees(const QString &fichier) const
     for (const auto &ens : m_enseignants) {
         QJsonObject ensObj;
         ensObj["nom"] = QString::fromStdString(ens->getNom());
+
+        QJsonArray creneauxEnsArray;
+        for (const auto &creneau : ens->getDisponibilites().getCalendrier()) {
+            QJsonObject crenObj;
+            crenObj["date"] = QString::fromStdString(creneau->getDate());
+            crenObj["heure"] = QString::fromStdString(creneau->getHeure());
+            creneauxEnsArray.append(crenObj);
+        }
+        ensObj["creneaux"] = creneauxEnsArray;
+
         enseignantsArray.append(ensObj);
     }
     sauvegarde["enseignants"] = enseignantsArray;
@@ -322,6 +332,15 @@ void TestProjet::sauvegarderDonnees(const QString &fichier) const
             etuObj["stage"] = "";
             etuObj["entreprise"] = "";
         }
+
+        QJsonArray creneauxEtuArray;
+        for (const auto &creneau : etu->getDisponibilitesEtudiant()) {
+            QJsonObject crenObj;
+            crenObj["date"] = QString::fromStdString(creneau->getDate());
+            crenObj["heure"] = QString::fromStdString(creneau->getHeure());
+            creneauxEtuArray.append(crenObj);
+        }
+        etuObj["creneaux"] = creneauxEtuArray;
 
         etudiantsArray.append(etuObj);
     }
@@ -377,7 +396,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
     }
 
     // === Restaurer les enseignants ===
-    QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
+    /*QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
     for (const auto &e : enseignantsArray) {
         QJsonObject ensObj = e.toObject();
         auto nom = ensObj["nom"].toString().toStdString();
@@ -387,7 +406,35 @@ void TestProjet::restaurerDonnees(const QString &fichier)
             auto ens = std::make_shared<Enseignant>(nom, "", std::vector<std::string>());
             m_enseignants.push_back(ens);
         }
+    }*/
+
+    // === Restaurer les enseignants ===
+    QJsonArray enseignantsArray = sauvegarde["enseignants"].toArray();
+    for (const auto &e : enseignantsArray) {
+        QJsonObject ensObj = e.toObject();
+        auto nom = ensObj["nom"].toString().toStdString();
+
+        auto itEns = std::find_if(m_enseignants.begin(), m_enseignants.end(),
+                                  [&](auto &existingEns) { return existingEns->getNom() == nom; });
+
+        if (itEns == m_enseignants.end()) {
+            auto ens = std::make_shared<Enseignant>(nom, "", std::vector<std::string>());
+            m_enseignants.push_back(ens);
+            itEns = std::prev(m_enseignants.end());  // Récupérer l'enseignant ajouté
+        }
+
+        // 🔥 Restaurer les créneaux de cet enseignant
+        QJsonArray creneauxEnsArray = ensObj["creneaux"].toArray();
+        for (const auto &c : creneauxEnsArray) {
+            QJsonObject crenObj = c.toObject();
+            auto date = crenObj["date"].toString().toStdString();
+            auto heure = crenObj["heure"].toString().toStdString();
+
+            auto creneau = std::make_shared<Creneau>(date, heure);
+            (*itEns)->ajouterDisponibilite(creneau);
+        }
     }
+
 
     // === Restaurer les stages ===
     QJsonArray stagesArray = sauvegarde["stages"].toArray();
@@ -410,7 +457,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
     }
 
     // === Restaurer les étudiants ===
-    QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
+   /* QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
     for (const auto &e : etudiantsArray) {
         QJsonObject etuObj = e.toObject();
         auto nom = etuObj["nom"].toString().toStdString();
@@ -432,7 +479,44 @@ void TestProjet::restaurerDonnees(const QString &fichier)
 
             m_etudiants.push_back(etu);
         }
+    }*/
+
+    // === Restaurer les étudiants ===
+    QJsonArray etudiantsArray = sauvegarde["etudiants"].toArray();
+    for (const auto &e : etudiantsArray) {
+        QJsonObject etuObj = e.toObject();
+        auto nom = etuObj["nom"].toString().toStdString();
+        auto prenom = etuObj["prenom"].toString().toStdString();
+        auto option = etuObj["option"].toString().toStdString();
+        auto stageTitre = etuObj["stage"].toString().toStdString();
+        auto entreprise = etuObj["entreprise"].toString().toStdString();
+
+        auto itEtu = std::find_if(m_etudiants.begin(), m_etudiants.end(),
+                                  [&](auto &existingEtu) { return existingEtu->getNom() == nom; });
+
+        if (itEtu == m_etudiants.end()) {
+            auto etu = std::make_shared<Etudiant>(nom, prenom, "", std::vector<std::string>{option});
+            auto stageAssocie = std::find_if(m_stages.begin(), m_stages.end(),
+                                             [&](auto &s) { return s->getTitre() == stageTitre; });
+            if (stageAssocie != m_stages.end()) {
+                etu->setStage(*stageAssocie);
+            }
+            m_etudiants.push_back(etu);
+            itEtu = std::prev(m_etudiants.end());  // Récupérer l'étudiant ajouté
+        }
+
+        // 🔥 Restaurer les créneaux de cet étudiant
+        QJsonArray creneauxEtuArray = etuObj["creneaux"].toArray();
+        for (const auto &c : creneauxEtuArray) {
+            QJsonObject crenObj = c.toObject();
+            auto date = crenObj["date"].toString().toStdString();
+            auto heure = crenObj["heure"].toString().toStdString();
+
+            auto creneau = std::make_shared<Creneau>(date, heure);
+            (*itEtu)->ajouterDisponibiliteEtudiant(creneau);
+        }
     }
+
 
     // === Restaurer les affectations des soutenances ===
     QJsonArray affectationsArray = sauvegarde["affectations"].toArray();
@@ -532,7 +616,7 @@ const std::vector<std::shared_ptr<Creneau>>& TestProjet::getCreneaux() const {
     return m_creneaux;
 }
 
-void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
+/*void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
 {
     auto& affectations = m_soutenance.getAffectationsModifiable(); // Accès modifiable
 
@@ -552,6 +636,43 @@ void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant,
     } else {
         qDebug() << "⚠️ Aucune affectation trouvée pour cet étudiant à cette date/heure.";
     }
+}*/
+
+void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
+{
+    auto& affectations = m_soutenance.getAffectationsModifiable(); // Accès modifiable
+
+    qDebug() << "🔍 Recherche de l'affectation à supprimer pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
+             << " | Date:" << QString::fromStdString(creneau->getDate())
+             << " | Heure:" << QString::fromStdString(creneau->getHeure());
+
+    auto it = std::find_if(affectations.begin(), affectations.end(),
+                           [&](const Soutenance::Affectation& aff) {
+                               return aff.etu == etudiant && aff.creneau == creneau;
+                           });
+
+    if (it != affectations.end()) {
+        std::shared_ptr<Jury> jury = it->jury; // Récupérer le jury avant suppression
+
+        // 🔥 Supprimer le créneau de l'étudiant
+        etudiant->retirerDisponibiliteEtudiant(creneau);
+
+        // 🔥 Supprimer le créneau du président et du co-jury
+        if (jury) {
+            jury->getPresident()->retirerDisponibilite(creneau);
+            jury->getCojury()->retirerDisponibilite(creneau);
+        }
+
+        // 🔥 Supprimer l'affectation de la liste
+        affectations.erase(it);
+
+        qDebug() << "✅ Soutenance supprimée pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
+                 << " | Jury: " << QString::fromStdString(jury->getPresident()->getNom()) << " & "
+                 << QString::fromStdString(jury->getCojury()->getNom());
+    } else {
+        qDebug() << "⚠️ Aucune affectation trouvée pour cet étudiant à cette date/heure.";
+    }
 }
 
+Soutenance& TestProjet::getSoutenanceModifiable() { return m_soutenance; }
 

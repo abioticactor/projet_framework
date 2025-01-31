@@ -74,6 +74,7 @@ public:
 
     void supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau);
 
+    Soutenance& getSoutenanceModifiable();
 
 };
 

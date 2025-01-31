@@ -29,6 +29,11 @@ public:
 private slots:
     void onValiderCreneau();
     void onOuvrirPlanning();
+    void afficherCreneauxAttribues();
+    void mettreAJourCreneaux();
+    void supprimerCreneau();
+
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -40,11 +45,16 @@ private:
     QComboBox   *m_comboEnseignants;
     QCheckBox   *m_ckTousEtudiants;
     QCheckBox   *m_ckTousEnseignants;
+    QTableWidget *m_tableCreneaux;
+    QPushButton *m_btnSupprimerCreneau;
 
-    QDateTimeEdit *m_dateTimeEdit; // pour choisir date+heure
+    QDateTimeEdit *m_dateTimeEdit;
 
     QPushButton *m_btnValider;
     QPushButton *m_btnPlanning;
+
+signals:
+    void creneauxModifies();
 };
 
 #endif // CRENEAUXDIALOG_H

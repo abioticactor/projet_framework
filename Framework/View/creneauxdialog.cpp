@@ -36,6 +36,9 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     // Boutons
     m_btnValider  = new QPushButton("Valider le Créneau", this);
     m_btnPlanning = new QPushButton("Ouvrir Planning", this);
+    m_btnSupprimerCreneau = new QPushButton("Supprimer Créneau", this);
+
+
 
     // Application de styles supplémentaires pour les widgets
     QString comboBoxStyle = "QComboBox {"
@@ -103,6 +106,8 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
                           "}";
     m_btnValider->setStyleSheet(buttonStyle);
     m_btnPlanning->setStyleSheet(buttonStyle);
+    m_btnSupprimerCreneau->setStyleSheet(buttonStyle);
+
 
     QString dateTimeEditStyle = "QDateTimeEdit {"
                                 "  border: 2px solid #888;"
@@ -129,6 +134,17 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
                                 "}";
     m_dateTimeEdit->setStyleSheet(dateTimeEditStyle);
 
+
+    // Ajouter la table des créneaux attribués
+    m_tableCreneaux = new QTableWidget(this);
+    m_tableCreneaux->setColumnCount(3);
+    QStringList headers;
+    headers << "Date" << "Heure" << "Prénom";
+    m_tableCreneaux->setHorizontalHeaderLabels(headers);
+    m_tableCreneaux->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    m_tableCreneaux->setFixedHeight(150);
+
+
     // Layout
     QVBoxLayout *layout = new QVBoxLayout(this);
     QLabel *labelEtudiants = new QLabel("Étudiants :", this);
@@ -148,15 +164,22 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     layout->addWidget(m_comboEtudiants);
     layout->addWidget(m_ckTousEtudiants);
 
+
     layout->addWidget(labelEnseignants);
     layout->addWidget(m_comboEnseignants);
     layout->addWidget(m_ckTousEnseignants);
 
+
     layout->addWidget(labelDateTime);
     layout->addWidget(m_dateTimeEdit);
 
+    layout->addWidget(m_tableCreneaux); // Ajouter le tableau
+    layout->addWidget(m_btnSupprimerCreneau); // Bouton ajouté sous le tableau
+
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addWidget(m_btnValider);
+    buttonLayout->addWidget(m_btnSupprimerCreneau);
     buttonLayout->addWidget(m_btnPlanning);
 
     layout->addLayout(buttonLayout);
@@ -164,6 +187,13 @@ CreneauxDialog::CreneauxDialog(TestProjet &projet, QWidget *parent)
     // Connexions
     connect(m_btnValider, &QPushButton::clicked, this, &CreneauxDialog::onValiderCreneau);
     connect(m_btnPlanning, &QPushButton::clicked, this, &CreneauxDialog::onOuvrirPlanning);
+    connect(m_comboEtudiants, &QComboBox::currentTextChanged, this, &CreneauxDialog::afficherCreneauxAttribues);
+    connect(m_comboEnseignants, &QComboBox::currentTextChanged, this, &CreneauxDialog::afficherCreneauxAttribues);
+    connect(this, &CreneauxDialog::creneauxModifies, this, &CreneauxDialog::mettreAJourCreneaux);
+    connect(m_btnSupprimerCreneau, &QPushButton::clicked, this, &CreneauxDialog::supprimerCreneau);
+
+
+
 }
 
 CreneauxDialog::~CreneauxDialog()
@@ -228,6 +258,8 @@ void CreneauxDialog::onValiderCreneau()
 
     QMessageBox::information(this, "Créneau ajouté",
                              QString("<font color='black'>Créneau %1 %2 ajouté/associé !</font>").arg(dateStr, heureStr));
+    emit creneauxModifies();
+
 }
 
 
@@ -253,4 +285,151 @@ void CreneauxDialog::closeEvent(QCloseEvent *event)
     }
 
     event->accept(); // Accepter la fermeture
+}
+
+void CreneauxDialog::afficherCreneauxAttribues() {
+    m_tableCreneaux->setRowCount(0); // Réinitialiser la table
+
+    QString selectedEtudiant = m_comboEtudiants->currentText();
+    QString selectedEnseignant = m_comboEnseignants->currentText();
+
+    bool filtrerEtudiant = !selectedEtudiant.isEmpty() && selectedEtudiant != "Aucun";
+    bool filtrerEnseignant = !selectedEnseignant.isEmpty() && selectedEnseignant != "Aucun";
+
+    qDebug() << "Étudiant sélectionné :" << selectedEtudiant;
+    qDebug() << "Enseignant sélectionné :" << selectedEnseignant;
+
+    if (filtrerEtudiant) {
+        // 🔥 Trouver l'étudiant sélectionné
+        auto itEtu = std::find_if(m_testProjet.getEtudiants().begin(), m_testProjet.getEtudiants().end(),
+                                  [&](const std::shared_ptr<Etudiant>& e) {
+                                      return QString::fromStdString(e->getNom() + " " + e->getPrenom()) == selectedEtudiant;
+                                  });
+
+        if (itEtu != m_testProjet.getEtudiants().end()) {
+            auto creneauxEtudiant = (*itEtu)->getDisponibilitesEtudiant(); // 🔥 Récupère tous les créneaux de l'étudiant
+            for (const auto& cren : creneauxEtudiant) {
+                int row = m_tableCreneaux->rowCount();
+                m_tableCreneaux->insertRow(row);
+
+                QTableWidgetItem *dateItem = new QTableWidgetItem(QString::fromStdString(cren->getDate()));
+                dateItem->setFlags(dateItem->flags() & ~Qt::ItemIsEditable);
+
+                QTableWidgetItem *heureItem = new QTableWidgetItem(QString::fromStdString(cren->getHeure()));
+                heureItem->setFlags(heureItem->flags() & ~Qt::ItemIsEditable);
+
+                QTableWidgetItem *prenomItem = new QTableWidgetItem(QString::fromStdString((*itEtu)->getPrenom()));
+                prenomItem->setFlags(prenomItem->flags() & ~Qt::ItemIsEditable);
+
+                m_tableCreneaux->setItem(row, 0, dateItem);
+                m_tableCreneaux->setItem(row, 1, heureItem);
+                m_tableCreneaux->setItem(row, 2, prenomItem); // Affichage du prénom
+
+            }
+        }
+    }
+
+    if (filtrerEnseignant) {
+        // 🔥 Trouver l'enseignant sélectionné
+        auto itEns = std::find_if(m_testProjet.getEnseignants().begin(), m_testProjet.getEnseignants().end(),
+                                  [&](const std::shared_ptr<Enseignant>& e) {
+                                      return QString::fromStdString(e->getNom()) == selectedEnseignant;
+                                  });
+
+        if (itEns != m_testProjet.getEnseignants().end()) {
+            auto creneauxEnseignant = (*itEns)->getDisponibilites().getCalendrier(); // 🔥 Récupère les créneaux de l'enseignant
+            for (const auto& cren : creneauxEnseignant) {
+                int row = m_tableCreneaux->rowCount();
+                m_tableCreneaux->insertRow(row);
+
+                QTableWidgetItem *dateItem = new QTableWidgetItem(QString::fromStdString(cren->getDate()));
+                dateItem->setFlags(dateItem->flags() & ~Qt::ItemIsEditable);
+
+                QTableWidgetItem *heureItem = new QTableWidgetItem(QString::fromStdString(cren->getHeure()));
+                heureItem->setFlags(heureItem->flags() & ~Qt::ItemIsEditable);
+
+                QTableWidgetItem *prenomItem = new QTableWidgetItem(QString::fromStdString((*itEns)->getNom())); // Les enseignants n'ont pas de prénom ici
+                prenomItem->setFlags(prenomItem->flags() & ~Qt::ItemIsEditable);
+
+                m_tableCreneaux->setItem(row, 0, dateItem);
+                m_tableCreneaux->setItem(row, 1, heureItem);
+                m_tableCreneaux->setItem(row, 2, prenomItem);
+
+            }
+        }
+    }
+}
+
+
+void CreneauxDialog::mettreAJourCreneaux() {
+    afficherCreneauxAttribues(); //Rafraîchir directement les créneaux affichés
+}
+
+void CreneauxDialog::supprimerCreneau() {
+    int selectedRow = m_tableCreneaux->currentRow();
+    if (selectedRow < 0) {
+        QMessageBox::warning(this, "Aucune sélection", "Veuillez sélectionner un créneau à supprimer.");
+        return;
+    }
+
+    QString dateCreneau = m_tableCreneaux->item(selectedRow, 0)->text();
+    QString heureCreneau = m_tableCreneaux->item(selectedRow, 1)->text();
+
+    QString selectedEtudiant = m_comboEtudiants->currentText();
+    QString selectedEnseignant = m_comboEnseignants->currentText();
+
+    bool isEtudiant = !selectedEtudiant.isEmpty() && selectedEtudiant != "Aucun";
+    bool isEnseignant = !selectedEnseignant.isEmpty() && selectedEnseignant != "Aucun";
+
+    if (!isEtudiant && !isEnseignant) {
+        QMessageBox::warning(this, "Aucune sélection", "Veuillez sélectionner un étudiant ou un enseignant.");
+        return;
+    }
+
+    std::shared_ptr<Creneau> creneau = nullptr;
+    for (const auto &c : m_testProjet.getCreneaux()) {
+        if (QString::fromStdString(c->getDate()) == dateCreneau &&
+            QString::fromStdString(c->getHeure()) == heureCreneau) {
+            creneau = c;
+            break;
+        }
+    }
+
+    if (!creneau) {
+        QMessageBox::warning(this, "Erreur", "Creneau introuvable.");
+        return;
+    }
+
+    std::shared_ptr<Etudiant> etu = nullptr;
+    std::shared_ptr<Enseignant> ens = nullptr;
+
+    if (isEtudiant) {
+        auto itEtu = std::find_if(m_testProjet.getEtudiants().begin(), m_testProjet.getEtudiants().end(),
+                                  [&](const std::shared_ptr<Etudiant>& e) {
+                                      return QString::fromStdString(e->getNom() + " " + e->getPrenom()) == selectedEtudiant;
+                                  });
+
+        if (itEtu != m_testProjet.getEtudiants().end()) {
+            etu = *itEtu;
+        }
+    }
+
+    if (isEnseignant) {
+        auto itEns = std::find_if(m_testProjet.getEnseignants().begin(), m_testProjet.getEnseignants().end(),
+                                  [&](const std::shared_ptr<Enseignant>& e) {
+                                      return QString::fromStdString(e->getNom()) == selectedEnseignant;
+                                  });
+
+        if (itEns != m_testProjet.getEnseignants().end()) {
+            ens = *itEns;
+        }
+    }
+
+    // 🔥 Appel de la bonne méthode de suppression
+    m_testProjet.getSoutenanceModifiable().supprimerAffectationPartielle(etu, ens, creneau);
+
+    QMessageBox::information(this, "Suppression réussie", "Le créneau a été supprimé.");
+
+    m_tableCreneaux->removeRow(selectedRow);
+    m_testProjet.sauvegarderDonnees("sauvegarde.json");
 }

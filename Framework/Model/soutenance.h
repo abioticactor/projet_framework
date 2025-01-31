@@ -8,6 +8,8 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <QDialog>
+
 
 class Soutenance {
 public:
@@ -54,7 +56,14 @@ public:
     const std::vector<Affectation>& getAffectations() const;
 
     void clearAffectations(); // Efface toutes les affectations
+
     std::vector<Affectation>& getAffectationsModifiable();
+
+    void supprimerAffectationPartielle(const std::shared_ptr<Etudiant>& etudiant,
+                                       const std::shared_ptr<Enseignant>& enseignant,
+                                       const std::shared_ptr<Creneau>& creneau);
+
+
 
 
 
