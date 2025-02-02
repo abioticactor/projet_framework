@@ -41,7 +41,6 @@ private:
     QPushButton *m_btnChargerCsv;
     QLabel      *m_labelInfo;
 
-    // Notre logique
     TestProjet   m_testProjet;
 };
 

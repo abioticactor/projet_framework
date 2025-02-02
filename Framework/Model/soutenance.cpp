@@ -133,26 +133,26 @@ void Soutenance::supprimerAffectationPartielle(const std::shared_ptr<Etudiant>& 
         std::shared_ptr<Etudiant> etu = it->etu;
 
         if (etudiant) {
-            etu->retirerDisponibiliteEtudiant(creneau);  // 🔥 L’étudiant perd son créneau
+            etu->retirerDisponibiliteEtudiant(creneau);  //L’étudiant perd son créneau
         }
         if (enseignant) {
             if (jury->getPresident() == enseignant) {
-                jury->getPresident()->retirerDisponibilite(creneau);  // 🔥 Le président perd son créneau
+                jury->getPresident()->retirerDisponibilite(creneau);  //Le président perd son créneau
             } else if (jury->getCojury() == enseignant) {
-                jury->getCojury()->retirerDisponibilite(creneau);  // 🔥 Le co-jury perd son créneau
+                jury->getCojury()->retirerDisponibilite(creneau);  //Le co-jury perd son créneau
             }
         }
 
-        // 🔥 Supprimer la soutenance uniquement si elle devient invalide
+        // Supprimer la soutenance uniquement si elle devient invalide
         if (!jury->getPresident()->getDisponibilites().getCalendrier().empty() &&
             !jury->getCojury()->getDisponibilites().getCalendrier().empty() &&
             !etu->getDisponibilitesEtudiant().empty()) {
-            qDebug() << "✅ Soutenance maintenue avec les éléments restants.";
+            qDebug() << "Soutenance maintenue avec les éléments restants.";
         } else {
             affectations.erase(it);
-            qDebug() << "✅ Soutenance supprimée car l’un des éléments est indisponible.";
+            qDebug() << "Soutenance supprimée car l’un des éléments est indisponible.";
         }
     } else {
-        qDebug() << "⚠️ Aucun lien de soutenance trouvé pour ce créneau.";
+        qDebug() << "Aucun lien de soutenance trouvé pour ce créneau.";
     }
 }

@@ -300,14 +300,14 @@ void CreneauxDialog::afficherCreneauxAttribues() {
     qDebug() << "Enseignant sélectionné :" << selectedEnseignant;
 
     if (filtrerEtudiant) {
-        // 🔥 Trouver l'étudiant sélectionné
+        //Trouver l'étudiant sélectionné
         auto itEtu = std::find_if(m_testProjet.getEtudiants().begin(), m_testProjet.getEtudiants().end(),
                                   [&](const std::shared_ptr<Etudiant>& e) {
                                       return QString::fromStdString(e->getNom() + " " + e->getPrenom()) == selectedEtudiant;
                                   });
 
         if (itEtu != m_testProjet.getEtudiants().end()) {
-            auto creneauxEtudiant = (*itEtu)->getDisponibilitesEtudiant(); // 🔥 Récupère tous les créneaux de l'étudiant
+            auto creneauxEtudiant = (*itEtu)->getDisponibilitesEtudiant();
             for (const auto& cren : creneauxEtudiant) {
                 int row = m_tableCreneaux->rowCount();
                 m_tableCreneaux->insertRow(row);
@@ -330,14 +330,14 @@ void CreneauxDialog::afficherCreneauxAttribues() {
     }
 
     if (filtrerEnseignant) {
-        // 🔥 Trouver l'enseignant sélectionné
+        // Trouver l'enseignant sélectionné
         auto itEns = std::find_if(m_testProjet.getEnseignants().begin(), m_testProjet.getEnseignants().end(),
                                   [&](const std::shared_ptr<Enseignant>& e) {
                                       return QString::fromStdString(e->getNom()) == selectedEnseignant;
                                   });
 
         if (itEns != m_testProjet.getEnseignants().end()) {
-            auto creneauxEnseignant = (*itEns)->getDisponibilites().getCalendrier(); // 🔥 Récupère les créneaux de l'enseignant
+            auto creneauxEnseignant = (*itEns)->getDisponibilites().getCalendrier();
             for (const auto& cren : creneauxEnseignant) {
                 int row = m_tableCreneaux->rowCount();
                 m_tableCreneaux->insertRow(row);
@@ -348,7 +348,7 @@ void CreneauxDialog::afficherCreneauxAttribues() {
                 QTableWidgetItem *heureItem = new QTableWidgetItem(QString::fromStdString(cren->getHeure()));
                 heureItem->setFlags(heureItem->flags() & ~Qt::ItemIsEditable);
 
-                QTableWidgetItem *prenomItem = new QTableWidgetItem(QString::fromStdString((*itEns)->getNom())); // Les enseignants n'ont pas de prénom ici
+                QTableWidgetItem *prenomItem = new QTableWidgetItem(QString::fromStdString((*itEns)->getNom()));
                 prenomItem->setFlags(prenomItem->flags() & ~Qt::ItemIsEditable);
 
                 m_tableCreneaux->setItem(row, 0, dateItem);
@@ -425,7 +425,7 @@ void CreneauxDialog::supprimerCreneau() {
         }
     }
 
-    // 🔥 Appel de la bonne méthode de suppression
+    //Appel de la bonne méthode de suppression
     m_testProjet.getSoutenanceModifiable().supprimerAffectationPartielle(etu, ens, creneau);
 
     QMessageBox::information(this, "Suppression réussie", "Le créneau a été supprimé.");

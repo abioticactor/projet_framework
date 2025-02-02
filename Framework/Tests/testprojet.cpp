@@ -60,8 +60,17 @@ void TestProjet::creerJurysEtAffecterEtudiants() {
     // Ensemble des étudiants déjà affectés (chacun n'a qu'une soutenance)
     std::unordered_set<std::shared_ptr<Etudiant>> etudiantsAffectes;
 
-    for (auto& creneau : m_creneaux) {
-        int nbAffectations = nombreSoutenancesPourCreneau(creneau); // 🔥 Vérifier combien de soutenances existent déjà
+    std::vector<std::shared_ptr<Creneau>> creneauxTries = m_creneaux; // Copie locale
+
+    std::sort(creneauxTries.begin(), creneauxTries.end(),
+              [](const std::shared_ptr<Creneau>& c1, const std::shared_ptr<Creneau>& c2) {
+                  if (c1->getDate() == c2->getDate())
+                      return c1->getHeure() < c2->getHeure();
+                  return c1->getDate() < c2->getDate();
+              });
+
+    for (auto& creneau : creneauxTries) {
+        int nbAffectations = nombreSoutenancesPourCreneau(creneau); // Vérifier combien de soutenances existent déjà
 
         if (nombreSoutenancesPourCreneau(creneau) >= 2) {
             std::cout << "[INFO] Créneau " << creneau->getDate() << " " << creneau->getHeure()
@@ -423,7 +432,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
             itEns = std::prev(m_enseignants.end());  // Récupérer l'enseignant ajouté
         }
 
-        // 🔥 Restaurer les créneaux de cet enseignant
+        // Restaurer les créneaux de cet enseignant
         QJsonArray creneauxEnsArray = ensObj["creneaux"].toArray();
         for (const auto &c : creneauxEnsArray) {
             QJsonObject crenObj = c.toObject();
@@ -505,7 +514,7 @@ void TestProjet::restaurerDonnees(const QString &fichier)
             itEtu = std::prev(m_etudiants.end());  // Récupérer l'étudiant ajouté
         }
 
-        // 🔥 Restaurer les créneaux de cet étudiant
+        // Restaurer les créneaux de cet étudiant
         QJsonArray creneauxEtuArray = etuObj["creneaux"].toArray();
         for (const auto &c : creneauxEtuArray) {
             QJsonObject crenObj = c.toObject();
@@ -577,26 +586,41 @@ int TestProjet::nombreSoutenancesPourCreneau(const std::shared_ptr<Creneau>& cre
                          [&](const auto& aff) { return aff.creneau == creneau; });
 }
 
-bool TestProjet::juryIndisponible(const std::shared_ptr<Enseignant>& enseignant, const std::shared_ptr<Creneau>& creneau) const
-{
+bool TestProjet::juryIndisponible(const std::shared_ptr<Enseignant>& enseignant,
+                                  const std::shared_ptr<Creneau>& creneau) const {
     const auto& affectations = m_soutenance.getAffectations();
 
-    for (const auto& aff : affectations) {
-        // Vérifie si l'enseignant est impliqué dans cette soutenance (président ou co-jury)
-        if (aff.jury->getPresident() == enseignant || aff.jury->getCojury() == enseignant) {
-            // Récupérer l'heure de la soutenance actuelle et l'heure du créneau à vérifier
-            int heureExistante = std::stoi(aff.creneau->getHeure().substr(0, 2));
-            int heureNouvelle = std::stoi(creneau->getHeure().substr(0, 2));
+    // Récupérer la date et l'heure du nouveau créneau
+    std::string dateNouvelle = creneau->getDate();
+    int heureNouvelle = std::stoi(creneau->getHeure().substr(0, 2));
+    int minutesNouvelle = std::stoi(creneau->getHeure().substr(3, 2));
+    int totalMinutesNouvelle = heureNouvelle * 60 + minutesNouvelle;
 
-            // Vérifier s'il y a moins d'une heure entre les deux soutenances
-            if (std::abs(heureNouvelle - heureExistante) < 1) {
-                return true; // Jury indisponible
+    for (const auto& aff : affectations) {
+        // Ne comparer que les soutenances qui ont lieu le même jour
+        if (aff.creneau->getDate() != dateNouvelle) {
+            continue;
+        }
+
+        // Vérifier si l'enseignant est impliqué dans cette soutenance (président ou co-jury)
+        if (aff.jury->getPresident() == enseignant || aff.jury->getCojury() == enseignant) {
+            // Récupérer l'heure et les minutes du créneau existant
+            int heureExistante = std::stoi(aff.creneau->getHeure().substr(0, 2));
+            int minutesExistantes = std::stoi(aff.creneau->getHeure().substr(3, 2));
+            int totalMinutesExistante = heureExistante * 60 + minutesExistantes;
+
+            // Si le nouveau créneau démarre pendant la période de 45 minutes suivant le début de la soutenance existante
+            if (totalMinutesNouvelle >= totalMinutesExistante &&
+                totalMinutesNouvelle < totalMinutesExistante + 45) {
+                return true; // L'enseignant est indisponible
             }
         }
     }
-
-    return false; // Jury disponible
+    return false; // L'enseignant est disponible
 }
+
+
+
 
 const Soutenance& TestProjet::getSoutenance() const { return m_soutenance; }
 
@@ -616,33 +640,12 @@ const std::vector<std::shared_ptr<Creneau>>& TestProjet::getCreneaux() const {
     return m_creneaux;
 }
 
-/*void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
-{
-    auto& affectations = m_soutenance.getAffectationsModifiable(); // Accès modifiable
-
-    qDebug() << "Recherche de l'affectation à supprimer pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
-             << " | Date:" << QString::fromStdString(creneau->getDate())
-             << " | Heure:" << QString::fromStdString(creneau->getHeure());
-
-    // Supprimer l'affectation correspondante
-    auto it = std::remove_if(affectations.begin(), affectations.end(),
-                             [&](const Soutenance::Affectation& aff) {
-                                 return aff.etu == etudiant && aff.creneau == creneau;
-                             });
-
-    if (it != affectations.end()) {
-        affectations.erase(it, affectations.end());
-        qDebug() << "✅ Soutenance supprimée pour l'étudiant:" << QString::fromStdString(etudiant->getNom());
-    } else {
-        qDebug() << "⚠️ Aucune affectation trouvée pour cet étudiant à cette date/heure.";
-    }
-}*/
 
 void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant, const std::shared_ptr<Creneau>& creneau)
 {
     auto& affectations = m_soutenance.getAffectationsModifiable(); // Accès modifiable
 
-    qDebug() << "🔍 Recherche de l'affectation à supprimer pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
+    qDebug() << "Recherche de l'affectation à supprimer pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
              << " | Date:" << QString::fromStdString(creneau->getDate())
              << " | Heure:" << QString::fromStdString(creneau->getHeure());
 
@@ -654,25 +657,24 @@ void TestProjet::supprimerAffectation(const std::shared_ptr<Etudiant>& etudiant,
     if (it != affectations.end()) {
         std::shared_ptr<Jury> jury = it->jury; // Récupérer le jury avant suppression
 
-        // 🔥 Supprimer le créneau de l'étudiant
+        //Supprimer le créneau de l'étudiant
         etudiant->retirerDisponibiliteEtudiant(creneau);
 
-        // 🔥 Supprimer le créneau du président et du co-jury
+        //Supprimer le créneau du président et du co-jury
         if (jury) {
             jury->getPresident()->retirerDisponibilite(creneau);
             jury->getCojury()->retirerDisponibilite(creneau);
         }
 
-        // 🔥 Supprimer l'affectation de la liste
+        //Supprimer l'affectation de la liste
         affectations.erase(it);
 
-        qDebug() << "✅ Soutenance supprimée pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
+        qDebug() << "Soutenance supprimée pour l'étudiant:" << QString::fromStdString(etudiant->getNom())
                  << " | Jury: " << QString::fromStdString(jury->getPresident()->getNom()) << " & "
                  << QString::fromStdString(jury->getCojury()->getNom());
     } else {
-        qDebug() << "⚠️ Aucune affectation trouvée pour cet étudiant à cette date/heure.";
+        qDebug() << "Aucune affectation trouvée pour cet étudiant à cette date/heure.";
     }
 }
 
 Soutenance& TestProjet::getSoutenanceModifiable() { return m_soutenance; }
-

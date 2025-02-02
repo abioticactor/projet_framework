@@ -437,7 +437,7 @@ void PlanningDialog::supprimerSoutenance()
         return;
     }
 
-    // ✅ Correction : Récupérer correctement la date et l'heure séparément
+    // Correction : Récupérer correctement la date et l'heure séparément
     QString creneauDate = m_calendar->selectedDate().toString("yyyy-MM-dd"); // Récupérer la date sélectionnée
     QString creneauHeure = m_table->item(selectedRow, 0)->text(); // L'heure est dans la première colonne
     QString etudiantNom = m_table->item(selectedRow, 1)->text().split(" ")[0]; // Prend uniquement le nom
@@ -460,22 +460,22 @@ void PlanningDialog::supprimerSoutenance()
 
     // Vérification des résultats
     if (itEtu == m_testProjet.getEtudiants().end()) {
-        qDebug() << "❌ Erreur : Étudiant introuvable.";
+        qDebug() << "Erreur : Étudiant introuvable.";
         QMessageBox::warning(this, "Erreur", "Impossible de trouver l'étudiant sélectionné.");
         return;
     }
 
     if (itCreneau == m_testProjet.getCreneaux().end()) {
-        qDebug() << "❌ Erreur : Créneau introuvable. Vérifiez si la date et l'heure sont bien renseignées.";
+        qDebug() << "Erreur : Créneau introuvable. Vérifiez si la date et l'heure sont bien renseignées.";
         QMessageBox::warning(this, "Erreur", "Impossible de trouver le créneau sélectionné.");
         return;
     }
 
-    // ✅ Suppression de la soutenance
+    // Suppression de la soutenance
     m_testProjet.supprimerAffectation(*itEtu, *itCreneau);
-    qDebug() << "✅ Soutenance supprimée pour:" << etudiantNom;
+    qDebug() << "Soutenance supprimée pour:" << etudiantNom;
 
-    // ✅ Mise à jour de l'affichage après suppression
+    // Mise à jour de l'affichage après suppression
     m_table->removeRow(selectedRow);
     m_testProjet.sauvegarderDonnees("sauvegarde.json");
 
